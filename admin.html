@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg: #0f1418;
+      --surface: #151c21;
+      --surface-soft: #1f2a31;
+      --border: #2d3942;
+      --text: #f3efe8;
+      --muted: #a8b3ba;
+      --primary: #5da85a;
+      --accent: #f08c2e;
+      --shadow: 0 18px 42px rgba(0, 0, 0, 0.32);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #0f1418, #121b20);
+      color: var(--text);
+    }
+
+    .dashboard {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .sidebar {
+      background: #11181d;
+      color: white;
+      padding: 28px 22px;
+    }
+
+    .brand {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 28px;
+    }
+
+    .brand span { color: #f7b04c; }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 24px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .menu {
+      display: grid;
+      gap: 10px;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.9);
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      font-weight: 700;
+    }
+
+    .main {
+      padding: 28px;
+    }
+
+    .alert {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: #211912;
+      color: #f0b978;
+      border: 1px solid #4a3623;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.92rem;
+    }
+
+    .btn-icon {
+      margin-right: 6px;
+      font-size: 0.9em;
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .stats,
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 18px;
+    }
+
+    .grid {
+      grid-template-columns: 1.25fr 0.95fr;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stat-label,
+    .card p,
+    .list span {
+      color: var(--muted);
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .list-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    @media (max-width: 980px) {
+      .dashboard,
+      .stats,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .sidebar,
+      .main {
+        padding: 18px 14px;
+      }
+
+      .top,
+      .actions,
+      .list-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .actions {
+        width: 100%;
+      }
+
+      .actions .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <aside class="sidebar">
+      <div class="brand">Agro<span>Tienda</span></div>
+      <div class="tag">Zona privada</div>
+      <nav class="menu">
+        <a href="#">Resumen general</a>
+        <a href="#">Productos</a>
+        <a href="#">Inventario</a>
+        <a href="#">Pedidos</a>
+        <a href="#">Clientes</a>
+        <a href="#">Usuarios admin</a>
+      </nav>
+    </aside>
+
+    <section class="main">
+      <div class="alert">
+        Esta es una maqueta del panel privado. Visualmente ya esta separado, pero para protegerlo de verdad necesitamos login con sesiones, roles y consultas a base de datos desde backend.
+      </div>
+
+      <div class="top">
+        <div>
+          <h1>Panel de administracion</h1>
+          <p>Controla inventario, ventas y usuarios internos de la tienda.</p>
+        </div>
+        <div class="actions">
+          <a class="btn" href="agri.html"><span class="btn-icon">&#128722;</span>Ver tienda</a>
+          <a class="btn primary" href="login.html"><span class="btn-icon">&#128682;</span>Cerrar sesion</a>
+        </div>
+      </div>
+
+      <section class="stats">
+        <article class="card">
+          <div class="stat-value">128</div>
+          <div class="stat-label">Productos activos</div>
+        </article>
+        <article class="card">
+          <div class="stat-value">36</div>
+          <div class="stat-label">Pedidos del dia</div>
+        </article>
+        <article class="card">
+          <div class="stat-value">84</div>
+          <div class="stat-label">Clientes registrados</div>
+        </article>
+        <article class="card">
+          <div class="stat-value">5</div>
+          <div class="stat-label">Administradores</div>
+        </article>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h3>Ultimos pedidos</h3>
+          <div class="list">
+            <div class="list-item"><strong>#1025 Kit de riego</strong><span>Pagado</span></div>
+            <div class="list-item"><strong>#1024 Semillas de maiz</strong><span>Preparando envio</span></div>
+            <div class="list-item"><strong>#1023 Fertilizante NPK</strong><span>Entregado</span></div>
+            <div class="list-item"><strong>#1022 Bioinsumo foliar</strong><span>Pendiente</span></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Tareas del administrador</h3>
+          <div class="list">
+            <div class="list-item"><strong>Revisar stock bajo</strong><span>12 productos</span></div>
+            <div class="list-item"><strong>Validar nuevos usuarios</strong><span>4 solicitudes</span></div>
+            <div class="list-item"><strong>Actualizar promociones</strong><span>2 campanas</span></div>
+            <div class="list-item"><strong>Respaldar base de datos</strong><span>Programado</span></div>
+          </div>
+        </article>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

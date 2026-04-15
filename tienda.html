@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg: #0f1418;
+      --surface: #151c21;
+      --surface-soft: #1b252b;
+      --surface-muted: #243039;
+      --border: #2d3942;
+      --text: #f3efe8;
+      --muted: #a8b3ba;
+      --primary: #f08c2e;
+      --secondary: #5da85a;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(240, 140, 46, 0.12), transparent 26%),
+        radial-gradient(circle at right center, rgba(93, 168, 90, 0.12), transparent 28%),
+        var(--bg);
+      color: var(--text);
+    }
+    a { color: inherit; text-decoration: none; }
+    .page { width: min(1360px, calc(100% - 36px)); margin: 22px auto; display: grid; gap: 18px; }
+    .topbar, .hero, .filters, .catalog {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 18px 24px;
+    }
+    .brand { display: grid; gap: 4px; }
+    .brand h1 { margin: 0; font-size: 1.8rem; }
+    .brand span { color: var(--primary); }
+    .brand p { margin: 0; color: var(--muted); }
+    .top-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .hero {
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: center;
+      background:
+        radial-gradient(circle at right, rgba(255,255,255,0.05), transparent 35%),
+        linear-gradient(135deg, #1a2523, #20262e);
+    }
+    .hero small {
+      color: var(--primary);
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero h2 {
+      margin: 10px 0 12px;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      line-height: 1;
+    }
+    .hero p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      max-width: 580px;
+      line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface-muted);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--primary), #f2b15a);
+      color: white;
+      border-color: transparent;
+    }
+    .hero-side { display: grid; gap: 12px; }
+    .mini-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(36, 48, 57, 0.65);
+      border: 1px solid var(--border);
+    }
+    .mini-card strong { display: block; margin-bottom: 8px; color: var(--secondary); }
+    .filters {
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1.25fr repeat(4, 1fr) auto;
+      gap: 12px;
+      align-items: end;
+    }
+    .field { display: grid; gap: 8px; }
+    .field label { font-size: 0.88rem; color: var(--muted); font-weight: 700; }
+    .field input, .field select {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      color: var(--text);
+      font: inherit;
+    }
+    .catalog { padding: 22px; display: grid; gap: 20px; }
+    .catalog-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .catalog-head h3 { margin: 0; font-size: 1.4rem; }
+    .catalog-head p { margin: 4px 0 0; color: var(--muted); }
+    .sorts { display: flex; gap: 10px; flex-wrap: wrap; }
+    .sort-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .sort-pill.active { background: var(--secondary); color: white; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .product {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #1b252b, #161d23);
+      overflow: hidden;
+    }
+    .product-media {
+      height: 170px;
+      background: linear-gradient(135deg, #213425, #243039);
+      display: grid;
+      place-items: center;
+      font-size: 3.2rem;
+    }
+    .product-body { padding: 16px; display: grid; gap: 10px; }
+    .product small { color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .product h4 { margin: 0; min-height: 48px; }
+    .product-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .product-meta strong { color: var(--primary); font-size: 1.12rem; }
+    .product-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .product-actions .btn { flex: 1 1 140px; font-size: 0.9rem; }
+    @media (max-width: 1100px) {
+      .hero, .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      .page { width: min(100% - 18px, 100%); margin: 10px auto; }
+      .hero, .filters, .grid { grid-template-columns: 1fr; }
+      .topbar, .catalog-head { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Agro<span>Tienda</span></h1>
+        <p>Catalogo general de productos para el campo</p>
+      </div>
+      <div class="top-links">
+        <a class="chip" href="agri.html">&#8592; Inicio</a>
+        <a class="chip" href="promociones.html">&#127991; Promociones</a>
+        <a class="chip" href="mi-cuenta.html">&#128100; Mi cuenta</a>
+        <a class="chip" href="contacto.html">&#9993; Contacto</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <small>Tienda principal</small>
+        <h2>Todo el catalogo en un solo lugar</h2>
+        <p>Aqui concentramos el listado de productos, filtros por categoria, marca o precio, busqueda interna y acceso rapido a la ficha individual de cada articulo.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#catalogo">&#128269; Ver catalogo</a>
+          <a class="btn" href="promociones.html">&#127873; Revisar ofertas</a>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="mini-card">
+          <strong>Filtros pensados para compra real</strong>
+          <span>Categoria, precio, tipo, marca, orden y buscador interno.</span>
+        </div>
+        <div class="mini-card">
+          <strong>Accion directa</strong>
+          <span>Cada producto ya contempla boton de carrito y acceso a su detalle.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="filters">
+      <div class="field">
+        <label for="buscar">Buscar</label>
+        <input id="buscar" type="text" placeholder="Semillas, fertilizantes, herramientas...">
+      </div>
+      <div class="field">
+        <label for="categoria">Categoria</label>
+        <select id="categoria"><option>Todas</option><option>Semillas</option><option>Fertilizantes</option><option>Riego</option></select>
+      </div>
+      <div class="field">
+        <label for="precio">Precio</label>
+        <select id="precio"><option>Todo rango</option><option>Menos de $20</option><option>$20 a $50</option><option>Mas de $50</option></select>
+      </div>
+      <div class="field">
+        <label for="marca">Marca</label>
+        <select id="marca"><option>Todas</option><option>AgroMax</option><option>CampoPlus</option><option>BioCrop</option></select>
+      </div>
+      <div class="field">
+        <label for="tipo">Tipo</label>
+        <select id="tipo"><option>Todos</option><option>Organico</option><option>Convencional</option><option>Premium</option></select>
+      </div>
+      <button class="btn primary" type="button">&#128269; Filtrar</button>
+    </section>
+
+    <section class="catalog" id="catalogo">
+      <div class="catalog-head">
+        <div>
+          <h3>Catalogo de productos</h3>
+          <p>Listado base con filtros, orden y acciones de compra.</p>
+        </div>
+        <div class="sorts">
+          <span class="sort-pill active">Popularidad</span>
+          <span class="sort-pill">Precio</span>
+          <span class="sort-pill">Novedades</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <article class="product">
+          <div class="product-media">&#127793;</div>
+          <div class="product-body">
+            <small>Semillas</small>
+            <h4>Semilla certificada de maiz alto rendimiento</h4>
+            <div class="product-meta"><strong>$24.90</strong><span>AgroMax</span></div>
+            <div class="product-actions"><a class="btn primary" href="#">&#128722; Agregar</a><a class="btn" href="#">&#128065; Detalle</a></div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="product-media">&#129514;</div>
+          <div class="product-body">
+            <small>Fertilizante</small>
+            <h4>Fertilizante NPK para hortalizas y frutales</h4>
+            <div class="product-meta"><strong>$31.50</strong><span>BioCrop</span></div>
+            <div class="product-actions"><a class="btn primary" href="#">&#128722; Agregar</a><a class="btn" href="#">&#128065; Detalle</a></div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="product-media">&#128167;</div>
+          <div class="product-body">
+            <small>Riego</small>
+            <h4>Kit de microaspersores para cultivos y huertos</h4>
+            <div class="product-meta"><strong>$18.20</strong><span>CampoPlus</span></div>
+            <div class="product-actions"><a class="btn primary" href="#">&#128722; Agregar</a><a class="btn" href="#">&#128065; Detalle</a></div>
+          </div>
+        </article>
+        <article class="product">
+          <div class="product-media">&#128736;</div>
+          <div class="product-body">
+            <small>Herramientas</small>
+            <h4>Tijera de poda reforzada para trabajo continuo</h4>
+            <div class="product-meta"><strong>$22.00</strong><span>AgroTools</span></div>
+            <div class="product-actions"><a class="btn primary" href="#">&#128722; Agregar</a><a class="btn" href="#">&#128065; Detalle</a></div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

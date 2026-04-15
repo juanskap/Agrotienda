@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingreso | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root {
+      --bg: #0f1418;
+      --card: #151c21;
+      --surface: #243039;
+      --border: #2d3942;
+      --text: #f3efe8;
+      --muted: #a8b3ba;
+      --primary: #f08c2e;
+      --secondary: #5da85a;
+      --shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(240, 140, 46, 0.14), transparent 28%),
+        radial-gradient(circle at right center, rgba(93, 168, 90, 0.16), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .auth-shell {
+      width: min(1120px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .promo,
+    .panel {
+      padding: 42px;
+    }
+
+    .promo {
+      background: linear-gradient(145deg, #1a2523, #1c242b);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(93, 168, 90, 0.14);
+      color: var(--secondary);
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .roles {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .role-card {
+      background: rgba(36, 48, 57, 0.88);
+      border: 1px solid rgba(45, 57, 66, 0.95);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .role-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 1.8rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .tab.active {
+      background: var(--secondary);
+      color: white;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      font: inherit;
+    }
+
+    input,
+    select {
+      background: #0f1418;
+      color: var(--text);
+    }
+
+    button {
+      border: none;
+      background: linear-gradient(135deg, var(--primary), #f2b15a);
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+    }
+
+    .btn-icon {
+      margin-right: 6px;
+      font-size: 0.9em;
+    }
+
+    .helper {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #211912;
+      border: 1px solid var(--border);
+    }
+
+    .helper strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--primary);
+    }
+
+    .links {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-weight: 700;
+    }
+
+    @media (max-width: 860px) {
+      .auth-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .promo,
+      .panel {
+        padding: 28px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 12px;
+      }
+
+      .auth-shell {
+        border-radius: 20px;
+      }
+
+      .promo,
+      .panel {
+        padding: 22px 18px;
+      }
+
+      h1 {
+        font-size: clamp(1.7rem, 9vw, 2.4rem);
+      }
+
+      .tabs,
+      .links {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .tab,
+      .links a {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="promo">
+      <div>
+        <div class="brand">Agro<span>Tienda</span></div>
+        <span class="eyebrow">Acceso seguro</span>
+        <h1>Tu tienda y tu panel con accesos separados</h1>
+        <p>Desde aqui podremos autenticar clientes para compras y administradores para la gestion interna del negocio.</p>
+      </div>
+
+      <div class="roles">
+        <article class="role-card">
+          <strong>Cliente</strong>
+          <p>Consulta pedidos, edita perfil, guarda productos y finaliza compras.</p>
+        </article>
+        <article class="role-card">
+          <strong>Administrador</strong>
+          <p>Gestiona inventario, usuarios, pedidos y reportes en una zona privada.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Iniciar sesion</h2>
+      <p>Esta es la pantalla base. Cuando conectemos backend, este formulario validara credenciales reales y roles.</p>
+
+      <div class="tabs">
+        <span class="tab active">Cliente</span>
+        <span class="tab">Administrador</span>
+      </div>
+
+      <form>
+        <div>
+          <label for="correo">Correo electronico</label>
+          <input id="correo" type="email" placeholder="cliente@correo.com">
+        </div>
+
+        <div>
+          <label for="clave">Contrasena</label>
+          <input id="clave" type="password" placeholder="Ingresa tu contrasena">
+        </div>
+
+        <div>
+          <label for="rol">Tipo de acceso</label>
+          <select id="rol">
+            <option>Cliente</option>
+            <option>Administrador</option>
+          </select>
+        </div>
+
+        <button type="submit"><span class="btn-icon">&#128274;</span>Entrar al sistema</button>
+      </form>
+
+      <div class="helper">
+        <strong>Importante</strong>
+        <p>La privacidad del administrador no se puede asegurar solo con HTML. Luego agregaremos validacion del lado del servidor y base de datos.</p>
+      </div>
+
+      <div class="links">
+        <a href="registro.html">&#9998; Crear cuenta nueva</a>
+        <a href="agri.html">&#8592; Volver a la tienda</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
