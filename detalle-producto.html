@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle De Producto | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root { --bg:#f5f0e4; --surface:#fffdf7; --surface-soft:#edf2e6; --surface-muted:#e5eddd; --border:#d8dfcf; --text:#243124; --muted:#667261; --primary:#bf6f2f; --secondary:#6d8a34; --shadow:0 18px 34px rgba(95,76,42,.12); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(191,111,47,.12), transparent 26%), radial-gradient(circle at right center, rgba(109,138,52,.12), transparent 28%), var(--bg); color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(1360px, calc(100% - 34px)); margin:22px auto; display:grid; gap:18px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; padding:20px 24px; }
+    .brand h1 { margin:0; font-size:1.9rem; }
+    .brand span { color:var(--primary); }
+    .brand p { margin:6px 0 0; color:var(--muted); }
+    .links { display:flex; gap:10px; flex-wrap:wrap; }
+    .chip, .badge, .meta { padding:10px 14px; border-radius:999px; background:var(--surface-muted); border:1px solid var(--border); font-weight:700; }
+    .product-layout { display:grid; grid-template-columns:1.1fr .9fr; gap:18px; padding:24px; }
+    .gallery, .summary, .info-grid article, .related-card { border:1px solid var(--border); border-radius:22px; background:linear-gradient(180deg, #fffdf8, #f4ede0); }
+    .gallery { padding:24px; display:grid; gap:16px; }
+    .hero-product { min-height:420px; border-radius:20px; background:radial-gradient(circle at top right, rgba(255,255,255,.55), transparent 34%), linear-gradient(135deg, #f1e4cf, #e0ead0); display:grid; place-items:center; position:relative; overflow:hidden; }
+    .hero-product::before { content:""; position:absolute; inset:14% 18%; border-radius:28px; background:linear-gradient(180deg, #ffd267, #d9952e); box-shadow:0 18px 34px rgba(149,100,24,.16); }
+    .hero-product::after { content:"BioNPK"; position:absolute; font-size:2rem; font-weight:900; letter-spacing:.04em; color:#775113; }
+    .thumbs { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; }
+    .thumb { min-height:90px; border-radius:18px; border:1px solid var(--border); background:var(--surface-soft); display:grid; place-items:center; color:var(--muted); font-weight:700; }
+    .summary { padding:24px; display:grid; gap:18px; }
+    .eyebrow { color:var(--secondary); font-size:.82rem; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+    h2 { margin:0; font-size:clamp(2rem, 4vw, 3rem); line-height:.98; }
+    .muted { color:var(--muted); line-height:1.6; }
+    .price-row { display:flex; align-items:end; gap:12px; flex-wrap:wrap; }
+    .price-row strong { color:var(--primary); font-size:2.1rem; }
+    .price-row s { color:var(--muted); font-weight:700; }
+    .badges, .meta-list, .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .meta strong { color:var(--text); }
+    .qty-box { display:grid; gap:8px; }
+    .qty-box input { width:120px; padding:13px 14px; border-radius:14px; border:1px solid var(--border); background:var(--surface-soft); color:var(--text); font:inherit; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; border-radius:999px; border:1px solid var(--border); background:var(--surface-muted); color:var(--text); font:inherit; font-weight:800; cursor:pointer; }
+    .btn.primary { background:linear-gradient(135deg, var(--primary), #f2b15a); border-color:transparent; color:white; }
+    .btn.secondary { background:linear-gradient(135deg, var(--secondary), #8da34e); border-color:transparent; color:white; }
+    .info-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; }
+    .info-grid article { padding:20px; }
+    .related { padding:24px; display:grid; gap:16px; }
+    .related-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; }
+    .related-media { min-height:150px; border-radius:18px; background:linear-gradient(135deg, #dfe8cf, #f1e2c9); display:grid; place-items:center; font-size:2.4rem; }
+    .related-card { padding:18px; display:grid; gap:12px; }
+    .related-card h4, .related-card p, .info-grid h3, .related h3 { margin:0; }
+    @media (max-width:980px) { .product-layout, .info-grid, .related-grid { grid-template-columns:1fr; } }
+    @media (max-width:760px) { .page { width:min(100% - 18px, 100%); margin:10px auto; } .product-layout, .related, .topbar { padding:18px; } .thumbs { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="card topbar">
+      <div class="brand"><h1>Agro<span>Tienda</span></h1><p>Detalle completo del producto para decisiones de compra reales</p></div>
+      <div class="links">
+        <a class="chip" href="agri.html">&#8592; Inicio</a>
+        <a class="chip" href="tienda.html">&#128722; Tienda</a>
+        <a class="chip" href="carrito.html">&#128717; Carrito</a>
+        <a class="chip" href="favoritos.html">&#10084; Favoritos</a>
+      </div>
+    </header>
+    <section class="card product-layout">
+      <article class="gallery">
+        <div class="hero-product" aria-label="Producto destacado"></div>
+        <div class="thumbs"><div class="thumb">Vista frontal</div><div class="thumb">Presentacion</div><div class="thumb">Uso sugerido</div><div class="thumb">Etiqueta</div></div>
+      </article>
+      <article class="summary">
+        <span class="eyebrow">Nutricion vegetal premium</span>
+        <h2>Fertilizante NPK Balanceado Para Hortalizas Y Frutales</h2>
+        <p class="muted">Producto pensado para cultivos que necesitan una formula estable, respuesta uniforme y apoyo en crecimiento, floracion y desarrollo de fruto.</p>
+        <div class="price-row"><strong>$31.50</strong><s>$38.00</s><span class="badge">Disponible</span></div>
+        <div class="badges"><span class="badge">Marca: BioCrop</span><span class="badge">Peso: 25 kg</span><span class="badge">Categoria: Fertilizantes</span></div>
+        <div class="meta-list"><span class="meta"><strong>Stock:</strong> 28 unidades</span><span class="meta"><strong>Entrega:</strong> 24 a 48 horas</span><span class="meta"><strong>Codigo:</strong> AGR-NPK-250</span></div>
+        <div class="qty-box"><label for="cantidad"><strong>Cantidad</strong></label><input id="cantidad" type="number" value="1" min="1"></div>
+        <div class="actions"><a class="btn primary" href="carrito.html">&#128722; Agregar al carrito</a><a class="btn" href="favoritos.html">&#10084; Guardar en favoritos</a><a class="btn secondary" href="checkout.html">&#9989; Comprar ahora</a></div>
+        <p class="muted">La ficha final debera incluir imagenes reales, caracteristicas tecnicas, modo de uso, compatibilidades, advertencias y politica de devolucion.</p>
+      </article>
+    </section>
+    <section class="info-grid">
+      <article><h3>Descripcion</h3><p class="muted">Formula balanceada para etapas de desarrollo vegetativo y productivo. Ideal para horticultura, frutales y cultivos de ciclo medio.</p></article>
+      <article><h3>Beneficios</h3><p class="muted">Mejora vigor, apoya floracion uniforme y ayuda a sostener un crecimiento mas controlado en produccion comercial.</p></article>
+      <article><h3>Entrega Y Compra</h3><p class="muted">Disponible para envio nacional. Se integra con carrito, checkout, pedido confirmado y seguimiento de orden.</p></article>
+    </section>
+    <section class="card related">
+      <div><h3>Productos relacionados</h3><p class="muted">Esta zona ayudara a mejorar ticket promedio y navegacion entre productos similares.</p></div>
+      <div class="related-grid">
+        <article class="related-card"><div class="related-media">&#127793;</div><h4>Semilla certificada de maiz</h4><p class="muted">$24.90</p><a class="btn" href="detalle-producto.html">&#128065; Ver detalle</a></article>
+        <article class="related-card"><div class="related-media">&#128167;</div><h4>Kit de microaspersores</h4><p class="muted">$18.20</p><a class="btn" href="detalle-producto.html">&#128065; Ver detalle</a></article>
+        <article class="related-card"><div class="related-media">&#128736;</div><h4>Fumigadora manual ligera</h4><p class="muted">$42.00</p><a class="btn" href="detalle-producto.html">&#128065; Ver detalle</a></article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root { --bg:#f5f0e4; --surface:#fffdf7; --surface-soft:#edf2e6; --surface-muted:#e5eddd; --border:#d8dfcf; --text:#243124; --muted:#667261; --primary:#bf6f2f; --secondary:#6d8a34; --shadow:0 18px 34px rgba(95,76,42,.12); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(191,111,47,.12), transparent 26%), radial-gradient(circle at right center, rgba(109,138,52,.12), transparent 28%), var(--bg); color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(1360px, calc(100% - 34px)); margin:22px auto; display:grid; gap:18px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); }
+    .topbar { padding:20px 24px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+    .brand h1 { margin:0; font-size:1.9rem; }
+    .brand span { color:var(--primary); }
+    .brand p { margin:6px 0 0; color:var(--muted); }
+    .links { display:flex; gap:10px; flex-wrap:wrap; }
+    .chip, .btn { padding:10px 14px; border-radius:999px; background:var(--surface-muted); border:1px solid var(--border); font-weight:700; }
+    .layout { display:grid; grid-template-columns:1.15fr .85fr; gap:18px; }
+    .forms, .summary { padding:24px; display:grid; gap:18px; }
+    .forms h2, .summary h2, .section h3 { margin:0; }
+    .muted { color:var(--muted); line-height:1.6; }
+    .section { display:grid; gap:14px; padding:20px; border-radius:22px; border:1px solid var(--border); background:linear-gradient(180deg, #fffdf8, #f4ede0); }
+    .grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; }
+    .full { grid-column:1 / -1; }
+    .field { display:grid; gap:8px; }
+    label { font-weight:700; font-size:.92rem; }
+    input, select, textarea { width:100%; padding:13px 14px; border-radius:14px; border:1px solid var(--border); background:var(--surface-soft); color:var(--text); font:inherit; }
+    textarea { min-height:110px; resize:vertical; }
+    .summary-box, .steps { padding:18px; border-radius:20px; background:var(--surface-soft); border:1px solid var(--border); display:grid; gap:12px; }
+    .step { display:flex; gap:12px; align-items:flex-start; }
+    .step span { width:34px; height:34px; border-radius:50%; background:var(--secondary); color:white; display:grid; place-items:center; font-weight:800; flex:none; }
+    .line { display:flex; justify-content:space-between; gap:12px; font-weight:700; }
+    .line.total { padding-top:10px; border-top:1px solid var(--border); color:var(--primary); font-size:1.08rem; }
+    .btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; color:var(--text); font:inherit; font-weight:800; cursor:pointer; }
+    .btn.primary { background:linear-gradient(135deg, var(--primary), #f2b15a); color:white; border-color:transparent; }
+    @media (max-width:980px) { .layout, .grid { grid-template-columns:1fr; } }
+    @media (max-width:760px) { .page { width:min(100% - 18px, 100%); margin:10px auto; } .topbar, .forms, .summary { padding:18px; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="card topbar">
+      <div class="brand"><h1>Agro<span>Tienda</span></h1><p>Datos del pedido, envio, pago y confirmacion visual</p></div>
+      <div class="links"><a class="chip" href="carrito.html">&#8592; Volver al carrito</a><a class="chip" href="mi-cuenta.html">&#128100; Mi cuenta</a><a class="chip" href="pedido-confirmado.html">&#9989; Confirmacion</a></div>
+    </header>
+    <section class="layout">
+      <article class="card forms">
+        <div><h2>Checkout</h2><p class="muted">Esta pantalla organiza todo lo necesario para que el proceso de compra quede listo para backend y pasarela de pago.</p></div>
+        <section class="section">
+          <h3>Informacion del cliente</h3>
+          <div class="grid">
+            <div class="field"><label for="nombre">Nombre completo</label><input id="nombre" type="text" value="Juan Carrillo"></div>
+            <div class="field"><label for="correo">Correo</label><input id="correo" type="email" value="juan@correo.com"></div>
+            <div class="field"><label for="telefono">Telefono</label><input id="telefono" type="tel" value="0999999999"></div>
+            <div class="field"><label for="documento">Documento</label><input id="documento" type="text" value="0102030405"></div>
+          </div>
+        </section>
+        <section class="section">
+          <h3>Envio</h3>
+          <div class="grid">
+            <div class="field full"><label for="direccion">Direccion</label><input id="direccion" type="text" value="Av. Principal y calle 10"></div>
+            <div class="field"><label for="ciudad">Ciudad</label><select id="ciudad"><option>Quito</option><option>Guayaquil</option><option>Cuenca</option></select></div>
+            <div class="field"><label for="entrega">Metodo de entrega</label><select id="entrega"><option>Envio nacional</option><option>Retiro en tienda</option><option>Despacho express</option></select></div>
+            <div class="field full"><label for="nota">Nota para el pedido</label><textarea id="nota">Entregar en horario de la tarde y confirmar por WhatsApp.</textarea></div>
+          </div>
+        </section>
+        <section class="section">
+          <h3>Pago</h3>
+          <div class="grid">
+            <div class="field"><label for="pago">Metodo de pago</label><select id="pago"><option>Transferencia</option><option>Tarjeta</option><option>Pago contra entrega</option></select></div>
+            <div class="field"><label for="factura">Tipo de comprobante</label><select id="factura"><option>Factura</option><option>Nota de venta</option></select></div>
+          </div>
+        </section>
+      </article>
+      <aside class="card summary">
+        <div><h2>Resumen final</h2><p class="muted">Aqui va la vista corta del pedido antes de confirmar la compra.</p></div>
+        <div class="summary-box"><div class="line"><span>Subtotal</span><span>$67.90</span></div><div class="line"><span>Descuento</span><span>-$6.79</span></div><div class="line"><span>Envio</span><span>$4.50</span></div><div class="line total"><span>Total a pagar</span><span>$65.61</span></div></div>
+        <div class="steps">
+          <div class="step"><span>1</span><div><strong>Cliente validado</strong><div class="muted">Correo, telefono y direccion cargados.</div></div></div>
+          <div class="step"><span>2</span><div><strong>Pedido listo</strong><div class="muted">Resumen preparado para registrar orden real.</div></div></div>
+          <div class="step"><span>3</span><div><strong>Pago pendiente</strong><div class="muted">Luego conectaremos pasarela o confirmacion manual.</div></div></div>
+        </div>
+        <div class="btn-row"><a class="btn primary" href="pedido-confirmado.html">&#9989; Confirmar compra</a><a class="btn" href="carrito.html">&#8592; Editar carrito</a></div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

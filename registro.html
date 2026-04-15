@@ -7,14 +7,14 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     :root {
-      --bg: #0f1418;
-      --card: #151c21;
-      --border: #2d3942;
-      --text: #f3efe8;
-      --muted: #a8b3ba;
-      --primary: #f08c2e;
-      --secondary: #5da85a;
-      --shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
+      --bg: #f5f0e4;
+      --card: #fffdf7;
+      --border: #d8dfcf;
+      --text: #243124;
+      --muted: #667261;
+      --primary: #bf6f2f;
+      --secondary: #6d8a34;
+      --shadow: 0 20px 44px rgba(95, 76, 42, 0.12);
     }
 
     * { box-sizing: border-box; }
@@ -24,8 +24,8 @@
       min-height: 100vh;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(240, 140, 46, 0.12), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(93, 168, 90, 0.14), transparent 32%),
+        radial-gradient(circle at top left, rgba(191, 111, 47, 0.12), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(109, 138, 52, 0.14), transparent 32%),
         var(--bg);
       display: grid;
       place-items: center;
@@ -37,7 +37,6 @@
       width: min(760px, 100%);
       background: var(--card);
       border: 1px solid var(--border);
-      background: #0f1418;
       color: var(--text);
       border-radius: 28px;
       box-shadow: var(--shadow);
@@ -87,7 +86,7 @@
 
     button {
       border: none;
-      background: linear-gradient(135deg, var(--secondary), #7cbc67);
+      background: linear-gradient(135deg, var(--secondary), #8da34e);
       color: white;
       font-weight: 800;
       cursor: pointer;
@@ -104,7 +103,7 @@
       margin-top: 18px;
       padding: 16px;
       border-radius: 16px;
-      background: #211912;
+      background: #f2e5d5;
       border: 1px solid var(--border);
       color: var(--muted);
     }
@@ -161,7 +160,7 @@
     <h1>Crear cuenta de cliente</h1>
     <p>Este registro esta pensado para compradores. La cuenta de administrador no debe crearse desde la parte publica, sino desde un proceso interno y protegido.</p>
 
-    <form>
+    <form action="login.html">
       <div>
         <label for="nombres">Nombres</label>
         <input id="nombres" type="text" placeholder="Tus nombres">
@@ -203,6 +202,7 @@
 
     <div class="links">
       <a href="login.html">&#128100; Ya tengo cuenta</a>
+      <a href="recuperar-password.html">&#128273; Recuperar acceso</a>
       <a href="agri.html">&#8592; Volver a la tienda</a>
     </div>
   </main>

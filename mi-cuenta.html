@@ -6,9 +6,9 @@
   <title>Mi Cuenta | Agrotienda</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
-    :root { --bg:#0f1418; --surface:#151c21; --surface-soft:#1b252b; --border:#2d3942; --text:#f3efe8; --muted:#a8b3ba; --primary:#f08c2e; --secondary:#5da85a; --shadow:0 18px 40px rgba(0,0,0,.28); }
+    :root { --bg:#f5f0e4; --surface:#fffdf7; --surface-soft:#edf2e6; --border:#d8dfcf; --text:#243124; --muted:#667261; --primary:#bf6f2f; --secondary:#6d8a34; --shadow:0 18px 34px rgba(95,76,42,.12); }
     * { box-sizing:border-box; }
-    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(240,140,46,.12), transparent 28%), radial-gradient(circle at right center, rgba(93,168,90,.12), transparent 30%), var(--bg); color:var(--text); }
+    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(191,111,47,.12), transparent 28%), radial-gradient(circle at right center, rgba(109,138,52,.12), transparent 30%), var(--bg); color:var(--text); }
     a { color:inherit; text-decoration:none; }
     .page { width:min(1320px, calc(100% - 34px)); margin:22px auto; display:grid; gap:18px; }
     .card { background:var(--surface); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); padding:24px; }
@@ -19,9 +19,9 @@
     .dashboard { display:grid; grid-template-columns:280px 1fr; gap:18px; }
     .menu { display:grid; gap:10px; }
     .menu a { padding:12px 14px; border-radius:14px; background:var(--surface-soft); border:1px solid var(--border); font-weight:700; }
-    .menu a.active { background:rgba(93,168,90,.18); border-color:rgba(93,168,90,.35); }
+    .menu a.active { background:rgba(109,138,52,.18); border-color:rgba(109,138,52,.35); }
     .content { display:grid; gap:16px; }
-    .hero { display:grid; grid-template-columns:1.1fr .9fr; gap:16px; align-items:center; background:radial-gradient(circle at right, rgba(255,255,255,.05), transparent 36%), linear-gradient(135deg, #1a2523, #20262e); }
+    .hero { display:grid; grid-template-columns:1.1fr .9fr; gap:16px; align-items:center; background:radial-gradient(circle at right, rgba(255,255,255,.48), transparent 36%), linear-gradient(135deg, #f6f0e2, #e7eedb); }
     .hero h2 { margin:0 0 10px; font-size:2rem; }
     .hero p, .muted { color:var(--muted); line-height:1.6; }
     .stats, .grid, .list { display:grid; gap:16px; }
@@ -48,18 +48,18 @@
     </section>
     <section class="dashboard">
       <aside class="card menu">
-        <a class="active" href="#">&#128100; Datos personales</a>
-        <a href="#">&#128230; Historial de pedidos</a>
-        <a href="#">&#128205; Direcciones de envio</a>
-        <a href="#">&#10084; Favoritos</a>
-        <a href="#">&#128717; Carrito guardado</a>
-        <a href="#">&#128272; Cambiar contrasena</a>
+        <a class="active" href="perfil.html">&#128100; Datos personales</a>
+        <a href="mis-pedidos.html">&#128230; Historial de pedidos</a>
+        <a href="direcciones.html">&#128205; Direcciones de envio</a>
+        <a href="favoritos.html">&#10084; Favoritos</a>
+        <a href="carrito.html">&#128717; Carrito guardado</a>
+        <a href="cambiar-password.html">&#128272; Cambiar contrasena</a>
       </aside>
       <section class="content">
         <article class="card hero">
           <div>
             <h2>Bienvenido, Juan</h2>
-            <p>Esta pestaña concentra la informacion principal del cliente: datos personales, pedidos, direcciones, favoritos, estado de compras y gestion de acceso.</p>
+            <p>Esta pestana concentra la informacion principal del cliente: datos personales, pedidos, direcciones, favoritos, estado de compras y gestion de acceso.</p>
           </div>
           <div class="list">
             <div class="item"><strong>Cliente desde</strong><span class="muted">Marzo 2026</span></div>
@@ -84,9 +84,9 @@
           <article class="card">
             <h3>Acciones rapidas</h3>
             <div class="list">
-              <div class="item"><a class="btn" href="#">&#9998; Editar perfil</a></div>
-              <div class="item"><a class="btn" href="#">&#128205; Gestionar direcciones</a></div>
-              <div class="item"><a class="btn" href="#">&#128274; Cambiar contrasena</a></div>
+              <div class="item"><a class="btn" href="perfil.html">&#9998; Editar perfil</a></div>
+              <div class="item"><a class="btn" href="direcciones.html">&#128205; Gestionar direcciones</a></div>
+              <div class="item"><a class="btn" href="cambiar-password.html">&#128274; Cambiar contrasena</a></div>
             </div>
           </article>
         </section>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root { --bg:#f5f0e4; --surface:#fffdf7; --surface-soft:#edf2e6; --surface-muted:#e5eddd; --border:#d8dfcf; --text:#243124; --muted:#667261; --primary:#bf6f2f; --secondary:#6d8a34; --shadow:0 18px 34px rgba(95,76,42,.12); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(191,111,47,.12), transparent 26%), radial-gradient(circle at right center, rgba(109,138,52,.12), transparent 28%), var(--bg); color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(1340px, calc(100% - 34px)); margin:22px auto; display:grid; gap:18px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); }
+    .topbar { padding:20px 24px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+    .brand h1 { margin:0; font-size:1.9rem; }
+    .brand span { color:var(--primary); }
+    .brand p { margin:6px 0 0; color:var(--muted); }
+    .links { display:flex; gap:10px; flex-wrap:wrap; }
+    .chip, .btn { padding:10px 14px; border-radius:999px; background:var(--surface-muted); border:1px solid var(--border); font-weight:700; }
+    .layout { display:grid; grid-template-columns:1.2fr .8fr; gap:18px; }
+    .cart, .summary { padding:24px; display:grid; gap:16px; }
+    .cart h2, .summary h2 { margin:0; }
+    .muted { color:var(--muted); line-height:1.6; }
+    .item { display:grid; grid-template-columns:120px 1fr auto; gap:16px; align-items:center; padding:16px; border-radius:20px; background:linear-gradient(180deg, #fffdf8, #f4ede0); border:1px solid var(--border); }
+    .media { min-height:108px; border-radius:18px; background:linear-gradient(135deg, #dce6cb, #f1e2c9); display:grid; place-items:center; font-size:2rem; }
+    .item h3, .item p { margin:0; }
+    .qty { display:grid; gap:8px; justify-items:end; }
+    .qty input, .coupon input { width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--border); background:var(--surface-soft); color:var(--text); font:inherit; }
+    .qty input { width:90px; }
+    .price { color:var(--primary); font-weight:800; }
+    .coupon, .totals, .note { padding:18px; border-radius:20px; background:var(--surface-soft); border:1px solid var(--border); display:grid; gap:12px; }
+    .line { display:flex; justify-content:space-between; gap:12px; font-weight:700; }
+    .line.total { color:var(--primary); font-size:1.1rem; padding-top:10px; border-top:1px solid var(--border); }
+    .btn-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; color:var(--text); font:inherit; font-weight:800; cursor:pointer; }
+    .btn.primary { background:linear-gradient(135deg, var(--primary), #f2b15a); color:white; border-color:transparent; }
+    .btn.secondary { background:linear-gradient(135deg, var(--secondary), #8da34e); color:white; border-color:transparent; }
+    @media (max-width:980px) { .layout, .item { grid-template-columns:1fr; } .qty { justify-items:start; } }
+    @media (max-width:760px) { .page { width:min(100% - 18px, 100%); margin:10px auto; } .topbar, .cart, .summary { padding:18px; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="card topbar">
+      <div class="brand"><h1>Agro<span>Tienda</span></h1><p>Revisa tu pedido antes de pasar al checkout</p></div>
+      <div class="links"><a class="chip" href="tienda.html">&#8592; Seguir comprando</a><a class="chip" href="favoritos.html">&#10084; Favoritos</a><a class="chip" href="checkout.html">&#9989; Checkout</a></div>
+    </header>
+    <section class="layout">
+      <article class="card cart">
+        <div><h2>Tu carrito</h2><p class="muted">Esta vista ya prepara el flujo real de cantidad, subtotal, cupones, envio y continuidad de compra.</p></div>
+        <div class="item"><div class="media">&#129514;</div><div><h3>Fertilizante NPK Balanceado</h3><p class="muted">Presentacion de 25 kg, uso para hortalizas y frutales.</p><p class="price">$31.50</p></div><div class="qty"><label for="qty1"><strong>Cantidad</strong></label><input id="qty1" type="number" value="1" min="1"></div></div>
+        <div class="item"><div class="media">&#128167;</div><div><h3>Kit De Microaspersores</h3><p class="muted">Paquete para riego eficiente en huerto y cultivo de prueba.</p><p class="price">$18.20</p></div><div class="qty"><label for="qty2"><strong>Cantidad</strong></label><input id="qty2" type="number" value="2" min="1"></div></div>
+      </article>
+      <aside class="card summary">
+        <div><h2>Resumen de compra</h2><p class="muted">Aqui luego entraran impuestos, envio real, descuentos y validaciones del pedido.</p></div>
+        <div class="coupon"><strong>Cupon de descuento</strong><input type="text" value="VERDE10" aria-label="Cupon"><button class="btn" type="button">&#127873; Aplicar cupon</button></div>
+        <div class="totals"><div class="line"><span>Subtotal</span><span>$67.90</span></div><div class="line"><span>Descuento</span><span>-$6.79</span></div><div class="line"><span>Envio estimado</span><span>$4.50</span></div><div class="line total"><span>Total</span><span>$65.61</span></div></div>
+        <div class="note"><strong>Beneficios del pedido</strong><span class="muted">Despacho nacional, seguimiento desde cuenta de cliente y confirmacion final del pedido.</span></div>
+        <div class="btn-row"><a class="btn primary" href="checkout.html">&#9989; Ir al checkout</a><a class="btn secondary" href="pedido-confirmado.html">&#128230; Vista final</a></div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

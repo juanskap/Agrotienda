@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Politicas | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root { --bg:#f5f0e4; --surface:#fffdf7; --surface-soft:#edf2e6; --surface-muted:#e5eddd; --border:#d8dfcf; --text:#243124; --muted:#667261; --primary:#bf6f2f; --secondary:#6d8a34; --shadow:0 18px 34px rgba(95,76,42,.12); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(191,111,47,.12), transparent 28%), radial-gradient(circle at right center, rgba(109,138,52,.12), transparent 30%), var(--bg); color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(1260px, calc(100% - 34px)); margin:22px auto; display:grid; gap:18px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); padding:24px; }
+    .top { display:grid; grid-template-columns:1fr auto; align-items:center; gap:14px; }
+    .brand h1 { margin:0; font-size:1.9rem; }
+    .brand span { color:var(--primary); }
+    .brand p { margin:6px 0 0; color:var(--muted); }
+    .links { display:flex; gap:10px; flex-wrap:wrap; }
+    .chip { padding:10px 14px; border-radius:999px; background:var(--surface-muted); border:1px solid var(--border); font-weight:700; }
+    .hero { background:radial-gradient(circle at right, rgba(255,255,255,.48), transparent 35%), linear-gradient(135deg, #f6f0e2, #e7eedb); }
+    .hero h2, .policy h3 { margin:0; }
+    .muted { color:var(--muted); line-height:1.7; margin:0; }
+    .policies { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px; }
+    .policy { padding:20px; border-radius:22px; background:linear-gradient(180deg, #fffdf8, #f4ede0); border:1px solid var(--border); display:grid; gap:10px; }
+    @media (max-width:980px) { .top, .policies { grid-template-columns:1fr; } }
+    @media (max-width:760px) { .page { width:min(100% - 18px, 100%); margin:10px auto; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card top">
+      <div class="brand"><h1>Agro<span>Tienda</span></h1><p>Terminos basicos para una tienda online mas confiable y profesional</p></div>
+      <div class="links"><a class="chip" href="agri.html">&#8592; Inicio</a><a class="chip" href="contacto.html">&#9993; Contacto</a><a class="chip" href="checkout.html">&#9989; Checkout</a></div>
+    </section>
+    <section class="card hero"><h2>Politicas de la tienda</h2><p class="muted">Esta pagina hace falta para que el proyecto no se vea incompleto. Aqui iran politicas claras sobre envios, devoluciones, pagos, privacidad y terminos de uso.</p></section>
+    <section class="policies">
+      <article class="policy"><h3>Envios</h3><p class="muted">Definir cobertura, tiempos de despacho, costos, zonas especiales y horarios de entrega o retiro.</p></article>
+      <article class="policy"><h3>Devoluciones</h3><p class="muted">Especificar condiciones para cambios, productos no elegibles, plazos y procedimiento de reclamo.</p></article>
+      <article class="policy"><h3>Pagos</h3><p class="muted">Detallar metodos aceptados, validacion de transferencias, confirmaciones y anulaciones cuando aplique.</p></article>
+      <article class="policy"><h3>Privacidad</h3><p class="muted">Explicar uso de datos del cliente, comunicaciones, seguridad y tratamiento de informacion personal.</p></article>
+    </section>
+  </main>
+</body>
+</html>

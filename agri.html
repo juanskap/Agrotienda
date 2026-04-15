@@ -7,18 +7,18 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     :root {
-      --bg: #0f1418;
-      --paper: #151c21;
-      --surface: #1b252b;
-      --surface-soft: #243039;
-      --primary: #f08c2e;
-      --primary-dark: #c86912;
-      --secondary: #5da85a;
-      --secondary-soft: #213425;
-      --text: #f3efe8;
-      --muted: #a9b4bb;
-      --border: #2d3942;
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --bg: #f5f0e4;
+      --paper: #fbf7ef;
+      --surface: #fffdf7;
+      --surface-soft: #edf2e6;
+      --primary: #bf6f2f;
+      --primary-dark: #97551f;
+      --secondary: #6d8a34;
+      --secondary-soft: #dde8cf;
+      --text: #243124;
+      --muted: #667261;
+      --border: #d8dfcf;
+      --shadow: 0 20px 44px rgba(95, 76, 42, 0.12);
       --radius-xl: 28px;
       --radius-lg: 20px;
       --radius-md: 14px;
@@ -34,8 +34,8 @@
       min-height: 100vh;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(240, 140, 46, 0.14), transparent 28%),
-        radial-gradient(circle at right center, rgba(93, 168, 90, 0.16), transparent 30%),
+        radial-gradient(circle at top left, rgba(191, 111, 47, 0.14), transparent 28%),
+        radial-gradient(circle at right center, rgba(109, 138, 52, 0.16), transparent 30%),
         var(--bg);
       color: var(--text);
     }
@@ -65,7 +65,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 40px;
-      background: #11181d;
+      background: #efe9db;
       border-bottom: 1px solid var(--border);
       font-size: 0.88rem;
       color: var(--muted);
@@ -160,17 +160,17 @@
       font-size: 0.9em;
     }
 
-    .admin-link {
-      background: var(--secondary);
-      color: white;
-      border-color: var(--secondary);
-    }
-
     .layout {
       display: grid;
-      grid-template-columns: 250px minmax(0, 1fr);
-      gap: 20px;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 22px;
       padding: 0 40px 40px;
+    }
+
+    .sidebar-stack {
+      display: grid;
+      gap: 18px;
+      align-content: start;
     }
 
     .quick-panel {
@@ -233,7 +233,7 @@
       align-items: center;
       padding: 10px 12px;
       border-radius: 12px;
-      background: rgba(36, 48, 57, 0.72);
+      background: rgba(255, 255, 255, 0.58);
       color: var(--muted);
       transition: background 0.2s ease, color 0.2s ease;
     }
@@ -249,53 +249,144 @@
     }
 
     .nav-panel {
-      padding: 14px;
+      padding: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(109, 138, 52, 0.18), transparent 28%),
+        linear-gradient(180deg, #f7f2e7, #ede6d6);
+      position: sticky;
+      top: 20px;
     }
 
-    .nav-panel h3 {
-      margin: 0 0 12px;
-      font-size: 0.92rem;
+    .nav-panel-header {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid rgba(95, 76, 42, 0.08);
+    }
+
+    .nav-panel-header span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(191, 111, 47, 0.12);
       color: var(--primary);
-      text-transform: uppercase;
+      font-size: 0.76rem;
+      font-weight: 800;
       letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .nav-panel-header h3 {
+      margin: 16px 0 8px;
+      font-size: 1.45rem;
+    }
+
+    .nav-panel-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
     }
 
     .nav-panel-links {
       display: grid;
       gap: 8px;
+      padding: 18px;
     }
 
     .nav-panel-links a {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(36, 48, 57, 0.62);
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(237, 242, 230, 0.9);
       color: var(--text);
-      font-weight: 600;
-      transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      border: 1px solid transparent;
     }
 
-    .nav-panel-links a:hover {
-      background: var(--secondary-soft);
-      color: white;
+    .nav-panel-links a:hover,
+    .nav-panel-links a.is-active {
+      background: linear-gradient(135deg, rgba(109, 138, 52, 0.18), rgba(231, 238, 218, 0.98));
+      color: var(--text);
       transform: translateX(4px);
+      border-color: rgba(109, 138, 52, 0.32);
     }
 
-    .nav-panel-links a span {
+    .nav-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.58);
+      font-size: 1rem;
+    }
+
+    .nav-copy {
+      display: grid;
+      gap: 2px;
+    }
+
+    .nav-copy strong {
+      font-size: 0.95rem;
+    }
+
+    .nav-copy small {
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .nav-index {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
     }
 
     .promo-chip {
-      margin-top: 12px;
-      background: var(--secondary-soft);
-      color: var(--secondary);
+      margin: 0 18px 18px;
+      background: rgba(221, 232, 207, 0.92);
+      color: #506331;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 700;
+      line-height: 1.5;
+      border: 1px solid rgba(109, 138, 52, 0.22);
+    }
+
+    .promo-chip strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .category-shortcuts {
+      display: grid;
+      gap: 8px;
+      padding: 0 18px 18px;
+    }
+
+    .shortcut {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       padding: 12px 14px;
       border-radius: 14px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(95, 76, 42, 0.06);
+      color: var(--text);
+    }
+
+    .shortcut span {
+      color: var(--muted);
+      font-size: 0.8rem;
       font-weight: 700;
-      text-align: center;
     }
 
     .sidebar-card,
@@ -339,14 +430,14 @@
     }
 
     .deal {
-      background: linear-gradient(180deg, #1b252b, #151c21);
+      background: linear-gradient(180deg, #fffdf7, #f5efe2);
     }
 
     .deal-badge {
       display: inline-block;
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(240, 140, 46, 0.14);
+      background: rgba(191, 111, 47, 0.14);
       color: var(--primary);
       font-size: 0.78rem;
       font-weight: 700;
@@ -389,8 +480,8 @@
     .hero-main {
       min-height: 390px;
       background:
-        radial-gradient(circle at center right, rgba(255, 255, 255, 0.06), transparent 36%),
-        linear-gradient(135deg, #1a2523, #20262e);
+        radial-gradient(circle at center right, rgba(255, 255, 255, 0.52), transparent 36%),
+        linear-gradient(135deg, #f6f0e2, #e8eedb);
       overflow: hidden;
       position: relative;
     }
@@ -482,7 +573,7 @@
       position: absolute;
       inset: 10% 5% 8% 8%;
       border-radius: 42% 58% 55% 45% / 44% 39% 61% 56%;
-      background: linear-gradient(145deg, rgba(240, 140, 46, 0.24), rgba(93, 168, 90, 0.18));
+      background: linear-gradient(145deg, rgba(191, 111, 47, 0.26), rgba(109, 138, 52, 0.18));
       filter: blur(4px);
     }
 
@@ -563,7 +654,7 @@
       height: 38px;
       border-radius: 50%;
       border: 1px solid var(--border);
-      background: rgba(15, 20, 24, 0.76);
+      background: rgba(248, 244, 235, 0.88);
       color: var(--text);
       font-size: 1rem;
       cursor: pointer;
@@ -579,7 +670,7 @@
       height: 10px;
       border: none;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.24);
+      background: rgba(95, 76, 42, 0.16);
       padding: 0;
       cursor: pointer;
     }
@@ -626,11 +717,11 @@
     }
 
     .mini-banner.green {
-      background: linear-gradient(135deg, #1f3124, #2b4733);
+      background: linear-gradient(135deg, #dce6cb, #eef4e6);
     }
 
     .mini-banner.orange {
-      background: linear-gradient(135deg, #302117, #4a3320);
+      background: linear-gradient(135deg, #ead9c3, #f3e6d3);
     }
 
     .section {
@@ -722,7 +813,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: 16px;
-      background: linear-gradient(180deg, #1c252b, #161d23);
+      background: linear-gradient(180deg, #fffdf8, #f4ede0);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
@@ -866,7 +957,7 @@
       margin: 0 40px 28px;
       padding: 24px 28px;
       border-radius: var(--radius-xl);
-      background: linear-gradient(135deg, #1f3a25, #274d30);
+      background: linear-gradient(135deg, #6d8a34, #8da34e);
       color: white;
       display: grid;
       grid-template-columns: 1.2fr 1fr;
@@ -917,7 +1008,7 @@
       margin: 0 40px 34px;
       padding: 26px 28px;
       border-radius: var(--radius-xl);
-      background: #11181d;
+      background: #f4eddf;
       border: 1px solid var(--border);
     }
 
@@ -969,14 +1060,26 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 44px;
-      height: 44px;
-      padding: 0 14px;
-      border-radius: 999px;
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border-radius: 16px;
       background: var(--surface-soft);
       border: 1px solid var(--border);
       color: var(--text);
-      font-weight: 700;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .social-links a:hover {
+      transform: translateY(-2px);
+      background: #f1eadc;
+      border-color: rgba(191, 111, 47, 0.26);
+    }
+
+    .social-links svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
     }
 
     .footer-column {
@@ -1039,6 +1142,10 @@
 
       .header {
         padding-top: 26px;
+      }
+
+      .nav-panel {
+        position: static;
       }
 
       .topbar {
@@ -1115,6 +1222,18 @@
       .header-actions a {
         flex: 1 1 calc(50% - 10px);
         text-align: center;
+      }
+
+      .nav-panel-header,
+      .nav-panel-links,
+      .category-shortcuts {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .promo-chip {
+        margin-left: 16px;
+        margin-right: 16px;
       }
 
       .header {
@@ -1202,7 +1321,7 @@
         <p>Soluciones para cultivos, ganado y campo</p>
       </div>
 
-      <form class="searchbar">
+      <form class="searchbar" action="resultados-busqueda.html">
         <select aria-label="Categoria">
           <option>Todas las categorias</option>
           <option>Semillas</option>
@@ -1214,26 +1333,57 @@
       </form>
 
       <div class="header-actions">
-        <a class="icon-btn" href="#"><span class="btn-icon">&#10084;</span>Favoritos</a>
+        <a class="icon-btn" href="favoritos.html"><span class="btn-icon">&#10084;</span>Favoritos</a>
         <a class="icon-btn" href="login.html"><span class="btn-icon">&#128100;</span>Ingresar</a>
         <a class="icon-btn" href="registro.html"><span class="btn-icon">&#9998;</span>Crear cuenta</a>
-        <a class="icon-btn admin-link" href="admin.html"><span class="btn-icon">&#9881;</span>Admin</a>
-        <a class="cart" href="#"><span class="btn-icon">&#128722;</span>Carrito $120</a>
+        <a class="cart" href="carrito.html"><span class="btn-icon">&#128722;</span>Carrito $120</a>
       </div>
     </header>
 
     <main class="layout">
-      <aside>
+      <aside class="sidebar-stack">
         <section class="sidebar-card nav-panel">
-          <h3>Navegacion</h3>
-          <div class="nav-panel-links">
-            <a href="agri.html"><strong>Inicio</strong><span>01</span></a>
-            <a href="tienda.html"><strong>Tienda</strong><span>02</span></a>
-            <a href="promociones.html"><strong>Promociones</strong><span>03</span></a>
-            <a href="mi-cuenta.html"><strong>Mi cuenta</strong><span>04</span></a>
-            <a href="contacto.html"><strong>Contacto</strong><span>05</span></a>
+          <div class="nav-panel-header">
+            <span>&#9776; Menu principal</span>
+            <h3>Explora la tienda por areas</h3>
+            <p>Accede rapido a categorias, ofertas y canales de compra sin perder de vista el catalogo.</p>
           </div>
-          <div class="promo-chip">Descuentos de cosecha hasta 30%</div>
+          <div class="nav-panel-links">
+            <a class="is-active" href="agri.html">
+              <span class="nav-icon">&#127968;</span>
+              <span class="nav-copy"><strong>Inicio</strong><small>Portada comercial</small></span>
+              <span class="nav-index">01</span>
+            </a>
+            <a href="tienda.html">
+              <span class="nav-icon">&#128722;</span>
+              <span class="nav-copy"><strong>Tienda</strong><small>Catalogo y productos</small></span>
+              <span class="nav-index">02</span>
+            </a>
+            <a href="promociones.html">
+              <span class="nav-icon">&#127873;</span>
+              <span class="nav-copy"><strong>Promociones</strong><small>Descuentos y combos</small></span>
+              <span class="nav-index">03</span>
+            </a>
+            <a href="mi-cuenta.html">
+              <span class="nav-icon">&#128100;</span>
+              <span class="nav-copy"><strong>Mi cuenta</strong><small>Pedidos y perfil</small></span>
+              <span class="nav-index">04</span>
+            </a>
+            <a href="contacto.html">
+              <span class="nav-icon">&#9993;</span>
+              <span class="nav-copy"><strong>Contacto</strong><small>Asesoria y soporte</small></span>
+              <span class="nav-index">05</span>
+            </a>
+          </div>
+          <div class="promo-chip">
+            <strong>Cosecha activa</strong>
+            Descuentos de temporada en nutricion, riego y semillas certificadas.
+          </div>
+          <div class="category-shortcuts">
+            <a class="shortcut" href="tienda.html"><strong>Semillas y vivero</strong><span>12 lineas</span></a>
+            <a class="shortcut" href="tienda.html"><strong>Fertilizantes</strong><span>18 productos</span></a>
+            <a class="shortcut" href="tienda.html"><strong>Riego y fumigacion</strong><span>07 equipos</span></a>
+          </div>
         </section>
 
         <section class="sidebar-card category-drawer">
@@ -1245,14 +1395,14 @@
             <div class="quick-list">
               <h4>Explorar</h4>
               <ul>
-                <li><a href="#"><span>Semillas premium</span><span>12</span></a></li>
-                <li><a href="#"><span>Fertilizantes</span><span>18</span></a></li>
-                <li><a href="#"><span>Herramientas</span><span>09</span></a></li>
-                <li><a href="#"><span>Riego</span><span>07</span></a></li>
-                <li><a href="#"><span>Ganaderia</span><span>06</span></a></li>
-                <li><a href="#"><span>Control de plagas</span><span>11</span></a></li>
-                <li><a href="#"><span>Sustratos</span><span>05</span></a></li>
-                <li><a href="#"><span>Accesorios</span><span>14</span></a></li>
+                <li><a href="categorias.html"><span>Semillas premium</span><span>12</span></a></li>
+                <li><a href="categorias.html"><span>Fertilizantes</span><span>18</span></a></li>
+                <li><a href="categorias.html"><span>Herramientas</span><span>09</span></a></li>
+                <li><a href="categorias.html"><span>Riego</span><span>07</span></a></li>
+                <li><a href="categorias.html"><span>Ganaderia</span><span>06</span></a></li>
+                <li><a href="categorias.html"><span>Control de plagas</span><span>11</span></a></li>
+                <li><a href="categorias.html"><span>Sustratos</span><span>05</span></a></li>
+                <li><a href="categorias.html"><span>Accesorios</span><span>14</span></a></li>
               </ul>
             </div>
           </div>
@@ -1505,7 +1655,7 @@
           <div class="section-head">
             <div>
               <h3>Accesos del sistema</h3>
-              <p>La tienda ya contempla clientes y administradores en areas separadas</p>
+              <p>Un mismo ingreso controlara clientes y administradores segun su rol</p>
             </div>
           </div>
 
@@ -1535,7 +1685,7 @@
         <h3>Recibe ofertas y consejos para tu produccion</h3>
         <p>Deja tu correo y te enviaremos promociones, novedades de temporada y recomendaciones utiles para tu agrotienda.</p>
       </div>
-      <form class="newsletter-form">
+      <form class="newsletter-form" action="contacto.html">
         <input type="email" placeholder="Ingresa tu correo">
         <button type="submit"><span class="btn-icon">&#9993;</span>Suscribirme</button>
       </form>
@@ -1547,10 +1697,18 @@
           <h3>AgroTienda</h3>
           <p>Una tienda pensada para ventas online de insumos agricolas, atencion directa y gestion moderna del negocio.</p>
           <div class="social-links">
-            <a href="#" aria-label="Facebook">Fb</a>
-            <a href="#" aria-label="Instagram">Ig</a>
-            <a href="#" aria-label="WhatsApp">Wa</a>
-            <a href="#" aria-label="TikTok">Tk</a>
+            <a href="contacto.html" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.5-3h-3.2V8.2c0-.9.3-1.6 1.6-1.6H17V4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.4V10H8v3h2.4v8h3.1Z"/></svg>
+            </a>
+            <a href="contacto.html" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Zm0 2.2A1.8 1.8 0 0 0 5.2 7v10A1.8 1.8 0 0 0 7 18.8h10a1.8 1.8 0 0 0 1.8-1.8V7A1.8 1.8 0 0 0 17 5.2H7Zm10.4 1.5a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8ZM12 7.4A4.6 4.6 0 1 1 7.4 12 4.6 4.6 0 0 1 12 7.4Zm0 2.2A2.4 2.4 0 1 0 14.4 12 2.4 2.4 0 0 0 12 9.6Z"/></svg>
+            </a>
+            <a href="contacto.html" aria-label="WhatsApp">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.8A8.5 8.5 0 0 1 8.1 19.3L3 21l1.8-4.9a8.5 8.5 0 1 1 15.7-4.3Zm-8.5-6.3a6.3 6.3 0 0 0-5.5 9.4l.3.5-1 2.7 2.8-.9.4.2A6.3 6.3 0 1 0 12 5.5Zm3.8 8c-.2-.1-1.1-.5-1.3-.6s-.3-.1-.5.1l-.4.6c-.1.2-.3.2-.5.1a5.2 5.2 0 0 1-1.5-.9 5.8 5.8 0 0 1-1-1.3c-.1-.2 0-.3.1-.5l.3-.4.2-.3a.4.4 0 0 0 0-.4l-.6-1.4c-.2-.4-.3-.3-.5-.3h-.4a.8.8 0 0 0-.6.3 2.3 2.3 0 0 0-.7 1.7 4 4 0 0 0 .8 2.1 9.3 9.3 0 0 0 3.6 3.2 8.3 8.3 0 0 0 1.2.4 2.8 2.8 0 0 0 1.3.1 2.1 2.1 0 0 0 1.4-1 1.8 1.8 0 0 0 .1-1c-.1-.1-.2-.2-.4-.3Z"/></svg>
+            </a>
+            <a href="contacto.html" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 3c.2 1.7 1.2 3.2 2.8 4 .8.4 1.6.6 2.5.6v2.7a8.1 8.1 0 0 1-2.4-.4 7.2 7.2 0 0 1-1.9-1V15a5.3 5.3 0 1 1-5.3-5.3c.3 0 .7 0 1 .1v2.8a2.8 2.8 0 1 0 1.5 2.4V3h2.8Z"/></svg>
+            </a>
           </div>
         </div>
 
@@ -1558,7 +1716,7 @@
           <h4>Tienda</h4>
           <a href="tienda.html">Productos</a>
           <a href="promociones.html">Promociones</a>
-          <a href="tienda.html">Categorias</a>
+          <a href="nosotros.html">Nosotros</a>
           <a href="contacto.html">Contacto</a>
         </div>
 
@@ -1566,7 +1724,8 @@
           <h4>Cuenta</h4>
           <a href="login.html">Ingresar</a>
           <a href="registro.html">Crear cuenta</a>
-          <a href="admin.html">Panel admin</a>
+          <a href="favoritos.html">Favoritos</a>
+          <a href="login.html">Acceso de usuarios</a>
           <a href="mi-cuenta.html">Mis pedidos</a>
         </div>
 
@@ -1575,6 +1734,7 @@
           <p>Quito, Ecuador</p>
           <p>agrotienda@correo.com</p>
           <p>+593 99 999 9999</p>
+          <p><a href="politicas.html">Politicas de la tienda</a></p>
         </div>
       </div>
 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido Confirmado | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root { --bg:#f5f0e4; --surface:#fffdf7; --surface-soft:#edf2e6; --surface-muted:#e5eddd; --border:#d8dfcf; --text:#243124; --muted:#667261; --primary:#bf6f2f; --secondary:#6d8a34; --shadow:0 18px 34px rgba(95,76,42,.12); }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(191,111,47,.12), transparent 28%), radial-gradient(circle at right center, rgba(109,138,52,.16), transparent 30%), var(--bg); color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .card { width:min(920px, 100%); background:var(--surface); border:1px solid var(--border); border-radius:28px; box-shadow:var(--shadow); padding:34px; display:grid; gap:20px; text-align:center; }
+    .status { width:92px; height:92px; margin:0 auto; border-radius:50%; background:linear-gradient(135deg, var(--secondary), #8da34e); display:grid; place-items:center; color:white; font-size:2.4rem; font-weight:900; }
+    h1 { margin:0; font-size:clamp(2rem, 5vw, 3rem); line-height:1; }
+    .muted { color:var(--muted); line-height:1.6; margin:0; }
+    .order-box, .steps { display:grid; gap:12px; padding:20px; border-radius:22px; background:linear-gradient(180deg, #fffdf8, #f4ede0); border:1px solid var(--border); text-align:left; }
+    .line { display:flex; justify-content:space-between; gap:12px; font-weight:700; flex-wrap:wrap; }
+    .tag { display:inline-flex; padding:10px 14px; border-radius:999px; background:rgba(109,138,52,.14); color:var(--secondary); font-weight:800; justify-self:center; }
+    .btn-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; border-radius:999px; border:1px solid var(--border); background:var(--surface-muted); color:var(--text); font:inherit; font-weight:800; }
+    .btn.primary { background:linear-gradient(135deg, var(--primary), #f2b15a); border-color:transparent; color:white; }
+    @media (max-width:760px) { body { padding:12px; } .card { padding:24px 18px; } }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="status">&#10003;</div>
+    <span class="tag">Pedido recibido con exito</span>
+    <h1>Tu compra ya fue registrada</h1>
+    <p class="muted">Esta pagina deja listo el cierre del flujo visual del e-commerce. Luego aqui mostraremos estado real, pago confirmado, guia de envio y actualizaciones del pedido.</p>
+    <section class="order-box">
+      <div class="line"><span>Numero de pedido</span><span>#AGR-2026-1045</span></div>
+      <div class="line"><span>Cliente</span><span>Juan Carrillo</span></div>
+      <div class="line"><span>Total pagado</span><span>$65.61</span></div>
+      <div class="line"><span>Metodo de pago</span><span>Transferencia</span></div>
+      <div class="line"><span>Estado inicial</span><span>En revision</span></div>
+    </section>
+    <section class="steps">
+      <strong>Siguientes pasos</strong>
+      <span class="muted">1. Confirmaremos el pago o validaremos el metodo seleccionado.</span>
+      <span class="muted">2. Prepararemos el pedido y generaremos el despacho.</span>
+      <span class="muted">3. Podras revisar el seguimiento desde tu cuenta de cliente.</span>
+    </section>
+    <div class="btn-row"><a class="btn primary" href="mi-cuenta.html">&#128100; Ver mis pedidos</a><a class="btn" href="tienda.html">&#128722; Seguir comprando</a><a class="btn" href="agri.html">&#127968; Volver al inicio</a></div>
+  </main>
+</body>
+</html>

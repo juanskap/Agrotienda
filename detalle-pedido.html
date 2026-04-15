@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle Del Pedido | Agrotienda</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    :root { --bg:#f5f0e4; --surface:#fffdf7; --surface-soft:#edf2e6; --surface-muted:#e5eddd; --border:#d8dfcf; --text:#243124; --muted:#667261; --primary:#bf6f2f; --secondary:#6d8a34; --shadow:0 18px 34px rgba(95,76,42,.12); }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; background:radial-gradient(circle at top left, rgba(191,111,47,.12), transparent 28%), radial-gradient(circle at right center, rgba(109,138,52,.12), transparent 30%), var(--bg); color:var(--text); }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(1260px, calc(100% - 34px)); margin:22px auto; display:grid; gap:18px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:24px; box-shadow:var(--shadow); padding:24px; }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+    .brand h1 { margin:0; font-size:1.9rem; } .brand span { color:var(--primary); } .brand p { margin:6px 0 0; color:var(--muted); }
+    .links { display:flex; gap:10px; flex-wrap:wrap; }
+    .chip, .btn { padding:10px 14px; border-radius:999px; background:var(--surface-muted); border:1px solid var(--border); font-weight:700; }
+    .layout { display:grid; grid-template-columns:1fr .9fr; gap:18px; }
+    .panel, .summary { display:grid; gap:14px; }
+    .hero { background:radial-gradient(circle at right, rgba(255,255,255,.48), transparent 36%), linear-gradient(135deg, #f6f0e2, #e7eedb); }
+    .hero h2, .box h3 { margin:0; }
+    .muted { color:var(--muted); line-height:1.6; margin:0; }
+    .box { padding:18px; border-radius:22px; border:1px solid var(--border); background:linear-gradient(180deg, #fffdf8, #f4ede0); display:grid; gap:10px; }
+    .line { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-weight:700; }
+    .item { display:grid; gap:8px; padding:14px 0; border-bottom:1px solid var(--border); }
+    .item:last-child { border-bottom:none; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; color:var(--text); font:inherit; }
+    .btn.primary { background:linear-gradient(135deg, var(--primary), #f2b15a); color:white; border-color:transparent; }
+    @media (max-width:980px) { .layout { grid-template-columns:1fr; } }
+    @media (max-width:760px) { .page { width:min(100% - 18px, 100%); margin:10px auto; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="card top">
+      <div class="brand"><h1>Agro<span>Tienda</span></h1><p>Detalle del pedido, productos comprados, envio y estado de la orden</p></div>
+      <div class="links"><a class="chip" href="mis-pedidos.html">&#8592; Mis pedidos</a><a class="chip" href="mi-cuenta.html">&#128100; Mi cuenta</a></div>
+    </section>
+    <section class="card hero"><h2>Pedido #1025</h2><p class="muted">Vista de detalle preparada para seguimiento, comprobantes y reorden de productos.</p></section>
+    <section class="layout">
+      <article class="panel">
+        <div class="box">
+          <h3>Productos del pedido</h3>
+          <div class="item"><strong>Kit de riego</strong><span class="muted">Cantidad: 1 | Total: $42.00</span></div>
+          <div class="item"><strong>Fertilizante NPK</strong><span class="muted">Cantidad: 1 | Total: $31.50</span></div>
+          <div class="item"><strong>Boquillas para microaspersor</strong><span class="muted">Cantidad: 2 | Total: $26.40</span></div>
+        </div>
+        <div class="box">
+          <h3>Seguimiento</h3>
+          <p class="muted">Pago confirmado, pedido preparado y entrega completada en Quito.</p>
+          <a class="btn primary" href="tienda.html">&#128722; Volver a comprar</a>
+        </div>
+      </article>
+      <aside class="summary">
+        <div class="box">
+          <h3>Resumen</h3>
+          <div class="line"><span>Subtotal</span><span>$99.90</span></div>
+          <div class="line"><span>Envio</span><span>$4.50</span></div>
+          <div class="line"><span>Total</span><span>$104.40</span></div>
+        </div>
+        <div class="box">
+          <h3>Entrega</h3>
+          <p class="muted">Av. Principal y calle 10, Quito. Entrega realizada en horario de la tarde.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

@@ -7,15 +7,15 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     :root {
-      --bg: #0f1418;
-      --card: #151c21;
-      --surface: #243039;
-      --border: #2d3942;
-      --text: #f3efe8;
-      --muted: #a8b3ba;
-      --primary: #f08c2e;
-      --secondary: #5da85a;
-      --shadow: 0 20px 48px rgba(0, 0, 0, 0.36);
+      --bg: #f5f0e4;
+      --card: #fffdf7;
+      --surface: #edf2e6;
+      --border: #d8dfcf;
+      --text: #243124;
+      --muted: #667261;
+      --primary: #bf6f2f;
+      --secondary: #6d8a34;
+      --shadow: 0 20px 44px rgba(95, 76, 42, 0.12);
     }
 
     * { box-sizing: border-box; }
@@ -25,8 +25,8 @@
       min-height: 100vh;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(240, 140, 46, 0.14), transparent 28%),
-        radial-gradient(circle at right center, rgba(93, 168, 90, 0.16), transparent 30%),
+        radial-gradient(circle at top left, rgba(191, 111, 47, 0.14), transparent 28%),
+        radial-gradient(circle at right center, rgba(109, 138, 52, 0.16), transparent 30%),
         var(--bg);
       color: var(--text);
       display: grid;
@@ -56,7 +56,7 @@
     }
 
     .promo {
-      background: linear-gradient(145deg, #1a2523, #1c242b);
+      background: linear-gradient(145deg, #e7efda, #f3ebdc);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -73,7 +73,7 @@
       display: inline-block;
       padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(93, 168, 90, 0.14);
+      background: rgba(109, 138, 52, 0.14);
       color: var(--secondary);
       font-weight: 800;
       font-size: 0.8rem;
@@ -99,8 +99,8 @@
     }
 
     .role-card {
-      background: rgba(36, 48, 57, 0.88);
-      border: 1px solid rgba(45, 57, 66, 0.95);
+      background: rgba(237, 242, 230, 0.92);
+      border: 1px solid rgba(216, 223, 207, 0.95);
       border-radius: 18px;
       padding: 18px;
     }
@@ -115,24 +115,14 @@
       font-size: 1.8rem;
     }
 
-    .tabs {
-      display: flex;
-      gap: 10px;
+    .entry-note {
       margin-bottom: 22px;
-      flex-wrap: wrap;
-    }
-
-    .tab {
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: var(--surface);
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .tab.active {
-      background: var(--secondary);
-      color: white;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(109, 138, 52, 0.1);
+      border: 1px solid rgba(109, 138, 52, 0.22);
+      color: #506331;
+      line-height: 1.55;
     }
 
     form {
@@ -146,7 +136,6 @@
     }
 
     input,
-    select,
     button {
       width: 100%;
       border-radius: 14px;
@@ -155,9 +144,8 @@
       font: inherit;
     }
 
-    input,
-    select {
-      background: #0f1418;
+    input {
+      background: #f7f2e8;
       color: var(--text);
     }
 
@@ -180,7 +168,7 @@
       margin-top: 16px;
       padding: 16px;
       border-radius: 16px;
-      background: #211912;
+      background: #f2e5d5;
       border: 1px solid var(--border);
     }
 
@@ -228,13 +216,11 @@
         font-size: clamp(1.7rem, 9vw, 2.4rem);
       }
 
-      .tabs,
       .links {
         flex-direction: column;
         align-items: stretch;
       }
 
-      .tab,
       .links a {
         text-align: center;
       }
@@ -247,8 +233,8 @@
       <div>
         <div class="brand">Agro<span>Tienda</span></div>
         <span class="eyebrow">Acceso seguro</span>
-        <h1>Tu tienda y tu panel con accesos separados</h1>
-        <p>Desde aqui podremos autenticar clientes para compras y administradores para la gestion interna del negocio.</p>
+        <h1>Un solo ingreso para clientes y administradores</h1>
+        <p>El mismo acceso servira para compras, seguimiento de pedidos y gestion interna. El sistema definira el destino segun el rol real de cada cuenta.</p>
       </div>
 
       <div class="roles">
@@ -265,17 +251,16 @@
 
     <section class="panel">
       <h2>Iniciar sesion</h2>
-      <p>Esta es la pantalla base. Cuando conectemos backend, este formulario validara credenciales reales y roles.</p>
+      <p>Ingresa con tu correo y contrasena. Cuando conectemos backend, el sistema identificara si debes entrar a tu cuenta o al panel administrativo.</p>
 
-      <div class="tabs">
-        <span class="tab active">Cliente</span>
-        <span class="tab">Administrador</span>
+      <div class="entry-note">
+        No hace falta escoger tipo de usuario aqui. El rol se validara desde la base de datos para evitar accesos manuales o inconsistentes.
       </div>
 
-      <form>
+      <form action="perfil.html">
         <div>
           <label for="correo">Correo electronico</label>
-          <input id="correo" type="email" placeholder="cliente@correo.com">
+          <input id="correo" type="email" placeholder="tucorreo@ejemplo.com">
         </div>
 
         <div>
@@ -283,23 +268,16 @@
           <input id="clave" type="password" placeholder="Ingresa tu contrasena">
         </div>
 
-        <div>
-          <label for="rol">Tipo de acceso</label>
-          <select id="rol">
-            <option>Cliente</option>
-            <option>Administrador</option>
-          </select>
-        </div>
-
         <button type="submit"><span class="btn-icon">&#128274;</span>Entrar al sistema</button>
       </form>
 
       <div class="helper">
         <strong>Importante</strong>
-        <p>La privacidad del administrador no se puede asegurar solo con HTML. Luego agregaremos validacion del lado del servidor y base de datos.</p>
+        <p>La privacidad del administrador no se puede asegurar solo con HTML. Luego agregaremos validacion del lado del servidor, sesiones y permisos por rol.</p>
       </div>
 
       <div class="links">
+        <a href="recuperar-password.html">&#128273; Olvide mi contrasena</a>
         <a href="registro.html">&#9998; Crear cuenta nueva</a>
         <a href="agri.html">&#8592; Volver a la tienda</a>
       </div>
