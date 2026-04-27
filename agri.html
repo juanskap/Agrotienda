@@ -124,7 +124,7 @@
     .searchbar select,
     .searchbar input {
       background: var(--surface);
-      padding: 14px 18px;
+      padding: 11px 15px;
       color: var(--text);
     }
 
@@ -133,25 +133,32 @@
       color: white;
       font-weight: 700;
       cursor: pointer;
+      padding: 11px 14px;
+      font-size: 0.9rem;
     }
 
     .header-actions {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: flex-end;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .icon-btn,
     .cart {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: var(--surface-soft);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 10px 12px;
+      padding: 7px 10px;
+      min-height: 34px;
       color: var(--text);
       font-weight: 600;
-      font-size: 0.92rem;
+      font-size: 0.84rem;
+      white-space: nowrap;
     }
 
     .btn-icon {
@@ -376,7 +383,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.55);
       border: 1px solid rgba(95, 76, 42, 0.06);
@@ -533,21 +540,29 @@
 
     .hero-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
+      align-items: stretch;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 11px 18px;
+      padding: 7px 12px;
       border-radius: 999px;
       border: none;
       cursor: pointer;
       font: inherit;
       font-weight: 700;
-      font-size: 0.94rem;
+      font-size: 0.84rem;
+      line-height: 1.2;
+      min-height: 34px;
+      white-space: nowrap;
+    }
+
+    .hero-actions .btn {
+      min-width: 158px;
     }
 
     .btn-primary {
@@ -995,12 +1010,13 @@
 
     .newsletter-form button {
       border: none;
-      padding: 12px 18px;
+      padding: 9px 14px;
       border-radius: 999px;
       background: #f0b44e;
       color: #1b1611;
       font: inherit;
       font-weight: 800;
+      font-size: 0.88rem;
       cursor: pointer;
     }
 
