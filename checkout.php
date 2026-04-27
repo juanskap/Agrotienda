@@ -5,6 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/app/layout.php';
 
 $user = requireLogin();
+$inventoryMessages = syncCartInventory();
+if ($inventoryMessages) {
+    setFlash('error', implode(' ', $inventoryMessages));
+    redirect('cart.php');
+}
+
 $totals = cartTotals();
 
 if (!$totals['items']) {
@@ -26,9 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect('checkout.php');
     }
 
-    $orderId = createOrder($user, $payload);
-    setFlash('success', 'Pedido registrado correctamente.');
-    redirect('order.php?id=' . $orderId);
+    try {
+        $orderId = createOrder($user, $payload);
+        setFlash('success', 'Pedido registrado correctamente.');
+        redirect('order.php?id=' . $orderId);
+    } catch (RuntimeException $error) {
+        setFlash('error', $error->getMessage());
+        redirect('cart.php');
+    }
 }
 
 renderHeader('Checkout');

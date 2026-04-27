@@ -9,6 +9,9 @@ function renderHeader(string $title, array $options = []): void
     $user = currentUser();
     $flash = pullFlash();
     $pageClass = $options['page_class'] ?? '';
+    $searchValue = trim((string) ($options['search'] ?? ''));
+    $activeCategory = trim((string) ($options['active_category'] ?? ''));
+    $categoryLinks = categories();
     ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,25 +24,63 @@ function renderHeader(string $title, array $options = []): void
 </head>
 <body class="<?= e($pageClass) ?>">
   <div class="shell">
+    <div class="utilitybar">
+      <div class="utilitybar-group">
+        <span>WhatsApp</span>
+        <span>099 000 0000</span>
+        <span>Envios a domicilio</span>
+      </div>
+      <div class="utilitybar-group">
+        <a href="contacto.html">Contacto</a>
+        <a href="nosotros.html">Nosotros</a>
+      </div>
+    </div>
     <header class="topbar">
-      <a class="brand" href="index.php">Agro<span>Tienda</span></a>
-      <nav class="nav">
-        <a href="index.php">Inicio</a>
+      <div class="brand-wrap">
+        <a class="brand" href="index.php"><span class="brand-mark">A</span>Agro<span>Tienda</span></a>
+        <p class="brand-subtitle">Compra insumos, herramientas y soluciones para tu campo.</p>
+      </div>
+      <form class="searchbar" method="get" action="store.php">
+        <input type="search" name="q" value="<?= e($searchValue) ?>" placeholder="Buscar semillas, fertilizantes, herramientas...">
+        <?php if ($activeCategory !== ''): ?>
+          <input type="hidden" name="category" value="<?= e($activeCategory) ?>">
+        <?php endif; ?>
+        <button class="btn primary" type="submit">Buscar</button>
+      </form>
+      <nav class="nav nav-account">
         <a href="store.php">Tienda</a>
         <a href="cart.php">Carrito</a>
         <?php if ($user): ?>
           <a href="account.php">Mi cuenta</a>
           <?php if ($user['role'] === 'admin'): ?>
             <a href="admin.php">Admin</a>
-            <a href="admin_products.php">Productos</a>
           <?php endif; ?>
           <a href="logout.php">Salir</a>
         <?php else: ?>
           <a href="login.php">Ingresar</a>
-          <a href="register.php">Crear cuenta</a>
         <?php endif; ?>
       </nav>
     </header>
+    <nav class="section-nav">
+      <a href="store.php" class="<?= $activeCategory === '' ? 'is-active' : '' ?>">Tienda</a>
+      <a href="index.php">Inicio</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <?php if ($categoryLinks): ?>
+      <nav class="category-strip">
+        <a class="category-link <?= $activeCategory === '' ? 'is-active' : '' ?>" href="store.php">
+          <span class="category-icon">T</span>
+          <span>Tienda</span>
+        </a>
+        <?php foreach ($categoryLinks as $categoryLink): ?>
+          <a class="category-link <?= $activeCategory === $categoryLink ? 'is-active' : '' ?>" href="store.php?category=<?= urlencode($categoryLink) ?>">
+            <span class="category-icon"><?= e(strtoupper(substr($categoryLink, 0, 1))) ?></span>
+            <span><?= e($categoryLink) ?></span>
+          </a>
+        <?php endforeach; ?>
+      </nav>
+    <?php endif; ?>
     <?php if ($flash): ?>
       <div class="flash flash-<?= e($flash['type']) ?>"><?= e($flash['message']) ?></div>
     <?php endif; ?>

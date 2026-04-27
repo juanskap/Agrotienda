@@ -14,9 +14,14 @@ if (!$product) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
-    addToCart($productId, $quantity);
-    setFlash('success', 'Producto agregado al carrito.');
-    redirect('cart.php');
+    try {
+        addToCart($productId, $quantity);
+        setFlash('success', 'Producto agregado al carrito.');
+        redirect('cart.php');
+    } catch (RuntimeException $error) {
+        setFlash('error', $error->getMessage());
+        redirect('product.php?id=' . $productId);
+    }
 }
 
 renderHeader('Producto');

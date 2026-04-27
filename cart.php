@@ -6,7 +6,14 @@ require_once __DIR__ . '/app/layout.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     updateCart($_POST['qty'] ?? []);
-    setFlash('success', 'Carrito actualizado.');
+    $messages = syncCartInventory();
+    setFlash($messages ? 'error' : 'success', $messages ? implode(' ', $messages) : 'Carrito actualizado.');
+    redirect('cart.php');
+}
+
+$inventoryMessages = syncCartInventory();
+if ($inventoryMessages) {
+    setFlash('error', implode(' ', $inventoryMessages));
     redirect('cart.php');
 }
 
@@ -34,7 +41,7 @@ renderHeader('Carrito');
             <div class="grid-2">
               <div class="field">
                 <label>Cantidad</label>
-                <input type="number" name="qty[<?= (int) $item['id'] ?>]" value="<?= (int) $item['quantity'] ?>" min="0">
+                <input type="number" name="qty[<?= (int) $item['id'] ?>]" value="<?= (int) $item['quantity'] ?>" min="0" max="<?= (int) $item['stock'] ?>">
               </div>
               <div class="field">
                 <label>Precio unitario</label>

@@ -357,6 +357,11 @@ function productById(int $id): ?array
     return $stmt->fetch() ?: null;
 }
 
+function availableStock(array $product): int
+{
+    return max(0, (int) ($product['stock'] ?? 0));
+}
+
 function createProduct(array $data): int
 {
     $stmt = db()->prepare(
@@ -424,11 +429,65 @@ function cart(): array
     return $_SESSION['cart'] ?? [];
 }
 
+function syncCartInventory(): array
+{
+    $cart = cart();
+    $next = [];
+    $messages = [];
+
+    foreach ($cart as $productId => $quantity) {
+        $product = productById((int) $productId);
+        if (!$product) {
+            $messages[] = 'Se retiro un producto del carrito porque ya no existe.';
+            continue;
+        }
+
+        $stock = availableStock($product);
+        if ($stock <= 0) {
+            $messages[] = 'Se retiro "' . $product['name'] . '" del carrito porque ya no tiene stock.';
+            continue;
+        }
+
+        $qty = max(0, (int) $quantity);
+        if ($qty === 0) {
+            continue;
+        }
+
+        if ($qty > $stock) {
+            $qty = $stock;
+            $messages[] = 'La cantidad de "' . $product['name'] . '" se ajusto al stock disponible.';
+        }
+
+        $next[(int) $productId] = $qty;
+    }
+
+    $_SESSION['cart'] = $next;
+
+    return $messages;
+}
+
 function addToCart(int $productId, int $quantity): void
 {
+    $product = productById($productId);
+    if (!$product) {
+        throw new RuntimeException('El producto ya no esta disponible.');
+    }
+
     $quantity = max(1, $quantity);
+    $stock = availableStock($product);
+    if ($stock <= 0) {
+        throw new RuntimeException('Este producto esta agotado.');
+    }
+
     $cart = cart();
-    $cart[$productId] = ($cart[$productId] ?? 0) + $quantity;
+    $currentQty = (int) ($cart[$productId] ?? 0);
+    $nextQty = $currentQty + $quantity;
+
+    if ($nextQty > $stock) {
+        throw new RuntimeException('No hay suficiente stock para agregar esa cantidad.');
+    }
+
+    $cart[$productId] = $nextQty;
     $_SESSION['cart'] = $cart;
 }
 
@@ -438,7 +497,17 @@ function updateCart(array $quantities): void
     foreach ($quantities as $productId => $quantity) {
         $qty = (int) $quantity;
         if ($qty > 0) {
-            $next[(int) $productId] = $qty;
+            $product = productById((int) $productId);
+            if (!$product) {
+                continue;
+            }
+
+            $stock = availableStock($product);
+            if ($stock <= 0) {
+                continue;
+            }
+
+            $next[(int) $productId] = min($qty, $stock);
         }
     }
     $_SESSION['cart'] = $next;
@@ -487,6 +556,7 @@ function cartTotals(): array
 
 function createOrder(array $user, array $payload): int
 {
+    syncCartInventory();
     $totals = cartTotals();
 
     if (empty($totals['items'])) {
@@ -528,9 +598,18 @@ function createOrder(array $user, array $payload): int
              VALUES (:order_id, :product_id, :product_name, :quantity, :unit_price, :line_total)'
         );
 
-        $stockStmt = $pdo->prepare('UPDATE products SET stock = stock - :quantity WHERE id = :id');
+        $stockStmt = $pdo->prepare(
+            'UPDATE products
+             SET stock = stock - :quantity
+             WHERE id = :id AND stock >= :quantity'
+        );
 
         foreach ($totals['items'] as $item) {
+            $currentProduct = productById((int) $item['id']);
+            if (!$currentProduct || availableStock($currentProduct) < (int) $item['quantity']) {
+                throw new RuntimeException('No hay stock suficiente para completar el pedido.');
+            }
+
             $itemStmt->execute([
                 'order_id' => $orderId,
                 'product_id' => $item['id'],
@@ -544,6 +623,10 @@ function createOrder(array $user, array $payload): int
                 'quantity' => $item['quantity'],
                 'id' => $item['id'],
             ]);
+
+            if ($stockStmt->rowCount() !== 1) {
+                throw new RuntimeException('El stock cambio mientras procesabamos tu pedido.');
+            }
         }
 
         $userUpdate = $pdo->prepare(
