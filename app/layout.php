@@ -12,6 +12,9 @@ function renderHeader(string $title, array $options = []): void
     $searchValue = trim((string) ($options['search'] ?? ''));
     $activeCategory = trim((string) ($options['active_category'] ?? ''));
     $categoryLinks = categories();
+    $currentPage = basename((string) parse_url($_SERVER['SCRIPT_NAME'] ?? '', PHP_URL_PATH));
+    $isCurrent = static fn (string $page): string => $currentPage === $page ? ' is-active' : '';
+    $isCurrentGroup = static fn (array $pages): string => in_array($currentPage, $pages, true) ? 'is-active' : '';
     ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -31,8 +34,8 @@ function renderHeader(string $title, array $options = []): void
         <span>Envios a domicilio</span>
       </div>
       <div class="utilitybar-group">
-        <a href="contacto.html">Contacto</a>
-        <a href="nosotros.html">Nosotros</a>
+        <a href="contacto.php">Contacto</a>
+        <a href="nosotros.php">Nosotros</a>
       </div>
     </div>
     <header class="topbar">
@@ -48,24 +51,25 @@ function renderHeader(string $title, array $options = []): void
         <button class="btn primary" type="submit">Buscar</button>
       </form>
       <nav class="nav nav-account">
-        <a href="store.php">Tienda</a>
-        <a href="cart.php">Carrito</a>
+        <a class="<?= $isCurrentGroup(['store.php', 'product.php']) ?>" href="store.php">Tienda</a>
+        <a class="<?= trim($isCurrent('cart.php')) ?>" href="cart.php">Carrito</a>
         <?php if ($user): ?>
-          <a href="account.php">Mi cuenta</a>
+          <a class="<?= $isCurrentGroup(['account.php', 'order.php']) ?>" href="account.php">Mi cuenta</a>
           <?php if ($user['role'] === 'admin'): ?>
-            <a href="admin.php">Admin</a>
+            <a class="<?= $isCurrentGroup(['admin.php', 'admin_products.php']) ?>" href="admin.php">Admin</a>
           <?php endif; ?>
           <a href="logout.php">Salir</a>
         <?php else: ?>
-          <a href="login.php">Ingresar</a>
+          <a class="<?= trim($isCurrent('login.php')) ?>" href="login.php">Ingresar</a>
+          <a class="<?= trim($isCurrent('register.php')) ?>" href="register.php">Crear cuenta</a>
         <?php endif; ?>
       </nav>
     </header>
     <nav class="section-nav">
-      <a href="store.php" class="<?= $activeCategory === '' ? 'is-active' : '' ?>">Tienda</a>
-      <a href="index.php">Inicio</a>
-      <a href="nosotros.html">Nosotros</a>
-      <a href="contacto.html">Contacto</a>
+      <a href="store.php" class="<?= $isCurrentGroup(['store.php', 'product.php']) ?>">Tienda</a>
+      <a href="index.php" class="<?= $currentPage === 'index.php' ? 'is-active' : '' ?>">Inicio</a>
+      <a href="nosotros.php" class="<?= $currentPage === 'nosotros.php' ? 'is-active' : '' ?>">Nosotros</a>
+      <a href="contacto.php" class="<?= $currentPage === 'contacto.php' ? 'is-active' : '' ?>">Contacto</a>
     </nav>
     <?php if ($categoryLinks): ?>
       <nav class="category-strip">
@@ -98,7 +102,7 @@ function renderFooter(): void
         <p>Catalogo, cuenta, carrito y pedidos ya conectados en PHP con SQLite.</p>
       </div>
       <div class="footer-note">
-        Acceso demo admin: <code>admin@agrotienda.local</code> / <code>admin123</code>
+        Panel administrativo protegido por cuenta autorizada.
       </div>
     </footer>
   </div>

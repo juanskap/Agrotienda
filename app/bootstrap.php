@@ -2,10 +2,30 @@
 
 declare(strict_types=1);
 
+configureSession();
 session_start();
 
 define('APP_ROOT', dirname(__DIR__));
 define('DB_PATH', APP_ROOT . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'agrotienda.sqlite');
+
+function configureSession(): void
+{
+    $secure = (
+        (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+        (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443
+    );
+
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '',
+        'secure' => $secure,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+}
 
 function db(): PDO
 {
@@ -24,6 +44,7 @@ function db(): PDO
     $pdo = new PDO('sqlite:' . DB_PATH);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->exec('PRAGMA foreign_keys = ON');
 
     if ($needsSetup) {
         initializeDatabase($pdo);
@@ -96,6 +117,8 @@ function initializeDatabase(PDO $pdo): void
         )'
     );
 
+    createContactMessagesTable($pdo);
+
     seedDatabase($pdo);
 }
 
@@ -109,6 +132,22 @@ function migrateDatabase(PDO $pdo): void
     }
 
     syncProductImages($pdo);
+    createContactMessagesTable($pdo);
+}
+
+function createContactMessagesTable(PDO $pdo): void
+{
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS contact_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            phone TEXT DEFAULT "",
+            message TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT "Nuevo",
+            created_at TEXT NOT NULL
+        )'
+    );
 }
 
 function seedDatabase(PDO $pdo): void
@@ -125,7 +164,7 @@ function seedDatabase(PDO $pdo): void
         'email' => 'admin@agrotienda.local',
         'phone' => '0990000000',
         'address' => 'Oficina principal Agrotienda',
-        'password_hash' => password_hash('admin123', PASSWORD_DEFAULT),
+        'password_hash' => password_hash(seedPassword('AGROTIENDA_ADMIN_PASSWORD'), PASSWORD_DEFAULT),
         'role' => 'admin',
         'created_at' => $now,
     ]);
@@ -135,7 +174,7 @@ function seedDatabase(PDO $pdo): void
         'email' => 'cliente@agrotienda.local',
         'phone' => '0999999999',
         'address' => 'Av. Principal y calle 10',
-        'password_hash' => password_hash('cliente123', PASSWORD_DEFAULT),
+        'password_hash' => password_hash(seedPassword('AGROTIENDA_CUSTOMER_PASSWORD'), PASSWORD_DEFAULT),
         'role' => 'customer',
         'created_at' => $now,
     ]);
@@ -238,6 +277,17 @@ function syncProductImages(PDO $pdo): void
     }
 }
 
+function seedPassword(string $envName): string
+{
+    $password = getenv($envName);
+
+    if (is_string($password) && strlen($password) >= 8) {
+        return $password;
+    }
+
+    return bin2hex(random_bytes(16));
+}
+
 function redirect(string $path): never
 {
     header('Location: ' . $path);
@@ -265,12 +315,28 @@ function currentUser(): ?array
 
 function loginUser(array $user): void
 {
+    session_regenerate_id(true);
     $_SESSION['user_id'] = (int) $user['id'];
 }
 
 function logoutUser(): void
 {
-    unset($_SESSION['user_id'], $_SESSION['cart'], $_SESSION['flash']);
+    $_SESSION = [];
+
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params['path'],
+            $params['domain'],
+            (bool) $params['secure'],
+            (bool) $params['httponly']
+        );
+    }
+
+    session_destroy();
 }
 
 function requireLogin(): array
@@ -310,6 +376,30 @@ function pullFlash(): ?array
     unset($_SESSION['flash']);
 
     return $flash;
+}
+
+function csrfToken(): string
+{
+    if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+function csrfField(): string
+{
+    return '<input type="hidden" name="csrf_token" value="' . e(csrfToken()) . '">';
+}
+
+function requireValidCsrfToken(): void
+{
+    $postedToken = $_POST['csrf_token'] ?? '';
+
+    if (!is_string($postedToken) || !hash_equals(csrfToken(), $postedToken)) {
+        setFlash('error', 'La sesion del formulario expiro. Intentalo nuevamente.');
+        redirect($_SERVER['HTTP_REFERER'] ?? 'index.php');
+    }
 }
 
 function money(float $value): string
@@ -362,23 +452,67 @@ function availableStock(array $product): int
     return max(0, (int) ($product['stock'] ?? 0));
 }
 
+function normalizeProductData(array $data): array
+{
+    $normalized = [
+        'name' => trim((string) ($data['name'] ?? '')),
+        'category' => trim((string) ($data['category'] ?? '')),
+        'brand' => trim((string) ($data['brand'] ?? '')),
+        'price' => trim((string) ($data['price'] ?? '')),
+        'stock' => trim((string) ($data['stock'] ?? '')),
+        'image_url' => trim((string) ($data['image_url'] ?? '')),
+        'short_description' => trim((string) ($data['short_description'] ?? '')),
+        'description' => trim((string) ($data['description'] ?? '')),
+    ];
+
+    foreach (['name', 'category', 'brand', 'image_url', 'short_description', 'description'] as $field) {
+        if ($normalized[$field] === '') {
+            throw new InvalidArgumentException('Completa todos los campos del producto.');
+        }
+    }
+
+    if (!is_numeric($normalized['price']) || (float) $normalized['price'] < 0) {
+        throw new InvalidArgumentException('El precio debe ser un numero mayor o igual a cero.');
+    }
+
+    if (!ctype_digit($normalized['stock'])) {
+        throw new InvalidArgumentException('El stock debe ser un numero entero mayor o igual a cero.');
+    }
+
+    if (!filter_var($normalized['image_url'], FILTER_VALIDATE_URL)) {
+        throw new InvalidArgumentException('La URL de la imagen no es valida.');
+    }
+
+    $scheme = strtolower((string) parse_url($normalized['image_url'], PHP_URL_SCHEME));
+    if (!in_array($scheme, ['http', 'https'], true)) {
+        throw new InvalidArgumentException('La URL de la imagen debe usar http o https.');
+    }
+
+    $normalized['price'] = (float) $normalized['price'];
+    $normalized['stock'] = (int) $normalized['stock'];
+
+    return $normalized;
+}
+
 function createProduct(array $data): int
 {
+    $data = normalizeProductData($data);
+
     $stmt = db()->prepare(
         'INSERT INTO products (name, category, brand, price, stock, emoji, image_url, short_description, description)
          VALUES (:name, :category, :brand, :price, :stock, :emoji, :image_url, :short_description, :description)'
     );
 
     $stmt->execute([
-        'name' => trim($data['name']),
-        'category' => trim($data['category']),
-        'brand' => trim($data['brand']),
-        'price' => (float) $data['price'],
-        'stock' => max(0, (int) $data['stock']),
+        'name' => $data['name'],
+        'category' => $data['category'],
+        'brand' => $data['brand'],
+        'price' => $data['price'],
+        'stock' => $data['stock'],
         'emoji' => '',
-        'image_url' => trim($data['image_url']),
-        'short_description' => trim($data['short_description']),
-        'description' => trim($data['description']),
+        'image_url' => $data['image_url'],
+        'short_description' => $data['short_description'],
+        'description' => $data['description'],
     ]);
 
     return (int) db()->lastInsertId();
@@ -386,6 +520,8 @@ function createProduct(array $data): int
 
 function updateProduct(int $id, array $data): void
 {
+    $data = normalizeProductData($data);
+
     $stmt = db()->prepare(
         'UPDATE products
          SET name = :name,
@@ -401,21 +537,33 @@ function updateProduct(int $id, array $data): void
 
     $stmt->execute([
         'id' => $id,
-        'name' => trim($data['name']),
-        'category' => trim($data['category']),
-        'brand' => trim($data['brand']),
-        'price' => (float) $data['price'],
-        'stock' => max(0, (int) $data['stock']),
-        'image_url' => trim($data['image_url']),
-        'short_description' => trim($data['short_description']),
-        'description' => trim($data['description']),
+        'name' => $data['name'],
+        'category' => $data['category'],
+        'brand' => $data['brand'],
+        'price' => $data['price'],
+        'stock' => $data['stock'],
+        'image_url' => $data['image_url'],
+        'short_description' => $data['short_description'],
+        'description' => $data['description'],
     ]);
 }
 
 function deleteProduct(int $id): void
 {
+    if (productHasOrders($id)) {
+        throw new RuntimeException('No puedes eliminar un producto que ya tiene pedidos asociados.');
+    }
+
     $stmt = db()->prepare('DELETE FROM products WHERE id = :id');
     $stmt->execute(['id' => $id]);
+}
+
+function productHasOrders(int $id): bool
+{
+    $stmt = db()->prepare('SELECT 1 FROM order_items WHERE product_id = :id LIMIT 1');
+    $stmt->execute(['id' => $id]);
+
+    return (bool) $stmt->fetchColumn();
 }
 
 function categories(): array
@@ -682,6 +830,49 @@ function orderById(int $orderId, ?int $userId = null): ?array
     return $order;
 }
 
+function createContactMessage(array $payload): int
+{
+    $data = [
+        'name' => trim((string) ($payload['name'] ?? '')),
+        'email' => trim((string) ($payload['email'] ?? '')),
+        'phone' => trim((string) ($payload['phone'] ?? '')),
+        'message' => trim((string) ($payload['message'] ?? '')),
+    ];
+
+    if ($data['name'] === '' || $data['email'] === '' || $data['message'] === '') {
+        throw new InvalidArgumentException('Completa nombre, correo y mensaje.');
+    }
+
+    if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+        throw new InvalidArgumentException('Ingresa un correo valido.');
+    }
+
+    $stmt = db()->prepare(
+        'INSERT INTO contact_messages (name, email, phone, message, status, created_at)
+         VALUES (:name, :email, :phone, :message, :status, :created_at)'
+    );
+    $stmt->execute([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'phone' => $data['phone'],
+        'message' => $data['message'],
+        'status' => 'Nuevo',
+        'created_at' => date('c'),
+    ]);
+
+    return (int) db()->lastInsertId();
+}
+
+function recentContactMessages(int $limit = 8): array
+{
+    $limit = max(1, min(50, $limit));
+    $stmt = db()->prepare('SELECT * FROM contact_messages ORDER BY id DESC LIMIT :limit');
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
+
 function dashboardStats(): array
 {
     $pdo = db();
@@ -690,6 +881,7 @@ function dashboardStats(): array
         'products' => (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn(),
         'customers' => (int) $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'customer'")->fetchColumn(),
         'orders' => (int) $pdo->query('SELECT COUNT(*) FROM orders')->fetchColumn(),
+        'messages' => (int) $pdo->query('SELECT COUNT(*) FROM contact_messages')->fetchColumn(),
         'revenue' => (float) $pdo->query('SELECT COALESCE(SUM(total), 0) FROM orders')->fetchColumn(),
     ];
 }

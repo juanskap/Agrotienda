@@ -13,6 +13,8 @@ if (!$product) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
     $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
     try {
         addToCart($productId, $quantity);
@@ -41,6 +43,7 @@ renderHeader('Producto');
       <span class="muted">Marca <?= e($product['brand']) ?> | Stock <?= (int) $product['stock'] ?></span>
     </div>
     <form class="form" method="post">
+      <?= csrfField() ?>
       <div class="field">
         <label for="quantity">Cantidad</label>
         <input id="quantity" type="number" name="quantity" value="1" min="1" max="<?= (int) $product['stock'] ?>">

@@ -7,11 +7,19 @@ require_once __DIR__ . '/app/layout.php';
 $user = requireLogin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
+    $name = trim($_POST['name'] ?? '');
+    if ($name === '') {
+        setFlash('error', 'El nombre no puede estar vacio.');
+        redirect('account.php');
+    }
+
     $stmt = db()->prepare(
         'UPDATE users SET name = :name, phone = :phone, address = :address WHERE id = :id'
     );
     $stmt->execute([
-        'name' => trim($_POST['name'] ?? ''),
+        'name' => $name,
         'phone' => trim($_POST['phone'] ?? ''),
         'address' => trim($_POST['address'] ?? ''),
         'id' => $user['id'],
@@ -30,6 +38,7 @@ renderHeader('Mi cuenta');
     <span class="eyebrow">Perfil</span>
     <h2>Mi cuenta</h2>
     <form class="form" method="post">
+      <?= csrfField() ?>
       <div class="field">
         <label for="name">Nombre</label>
         <input id="name" name="name" value="<?= e($user['name']) ?>" required>

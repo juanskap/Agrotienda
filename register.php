@@ -5,6 +5,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/app/layout.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
@@ -13,6 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($name === '' || $email === '' || $password === '') {
         setFlash('error', 'Completa nombre, correo y contrasena.');
+        redirect('register.php');
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        setFlash('error', 'Ingresa un correo valido.');
+        redirect('register.php');
+    }
+
+    if (strlen($password) < 8) {
+        setFlash('error', 'La contrasena debe tener al menos 8 caracteres.');
         redirect('register.php');
     }
 
@@ -49,6 +61,7 @@ renderHeader('Registro');
   <span class="eyebrow">Nueva cuenta</span>
   <h2>Crear usuario cliente</h2>
   <form class="form" method="post">
+    <?= csrfField() ?>
     <div class="grid-2">
       <div class="field">
         <label for="name">Nombre completo</label>

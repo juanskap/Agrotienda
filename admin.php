@@ -7,6 +7,7 @@ require_once __DIR__ . '/app/layout.php';
 $user = requireAdmin();
 $stats = dashboardStats();
 $recentOrders = db()->query('SELECT * FROM orders ORDER BY id DESC LIMIT 8')->fetchAll();
+$recentMessages = recentContactMessages(6);
 $products = allProducts();
 
 renderHeader('Admin');
@@ -24,6 +25,7 @@ renderHeader('Admin');
   <article class="stat"><strong><?= $stats['products'] ?></strong><span class="muted">productos</span></article>
   <article class="stat"><strong><?= $stats['customers'] ?></strong><span class="muted">clientes</span></article>
   <article class="stat"><strong><?= $stats['orders'] ?></strong><span class="muted">pedidos</span></article>
+  <article class="stat"><strong><?= $stats['messages'] ?></strong><span class="muted">mensajes</span></article>
   <article class="stat"><strong><?= money($stats['revenue']) ?></strong><span class="muted">facturacion</span></article>
 </section>
 
@@ -62,5 +64,25 @@ renderHeader('Admin');
       <?php endforeach; ?>
     </div>
   </article>
+</section>
+
+<section class="card">
+  <h3>Mensajes de contacto</h3>
+  <?php if (!$recentMessages): ?>
+    <div class="empty">Todavia no hay mensajes recibidos.</div>
+  <?php else: ?>
+    <div class="list">
+      <?php foreach ($recentMessages as $message): ?>
+        <div class="list-item">
+          <div class="line">
+            <strong><?= e($message['name']) ?></strong>
+            <span class="muted"><?= e(date('d/m/Y H:i', strtotime($message['created_at']))) ?></span>
+          </div>
+          <p class="muted"><?= e($message['email']) ?><?= $message['phone'] !== '' ? ' | ' . e($message['phone']) : '' ?></p>
+          <p><?= e($message['message']) ?></p>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
 </section>
 <?php renderFooter(); ?>

@@ -15,13 +15,19 @@ if ($productId > 0 && !$editingProduct) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
     $action = $_POST['action'] ?? 'save';
 
     if ($action === 'delete') {
         $deleteId = (int) ($_POST['id'] ?? 0);
         if ($deleteId > 0) {
-            deleteProduct($deleteId);
-            setFlash('success', 'Producto eliminado.');
+            try {
+                deleteProduct($deleteId);
+                setFlash('success', 'Producto eliminado.');
+            } catch (RuntimeException $error) {
+                setFlash('error', $error->getMessage());
+            }
         }
         redirect('admin_products.php');
     }
@@ -37,34 +43,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'description' => trim($_POST['description'] ?? ''),
     ];
 
-    if (
-        $data['name'] === '' ||
-        $data['category'] === '' ||
-        $data['brand'] === '' ||
-        $data['price'] === '' ||
-        $data['stock'] === '' ||
-        $data['image_url'] === '' ||
-        $data['short_description'] === '' ||
-        $data['description'] === ''
-    ) {
-        setFlash('error', 'Completa todos los campos del producto.');
+    try {
+        if ($productId > 0) {
+            updateProduct($productId, $data);
+            setFlash('success', 'Producto actualizado.');
+            redirect('admin_products.php?id=' . $productId);
+        }
+
+        $newId = createProduct($data);
+    } catch (InvalidArgumentException $error) {
+        setFlash('error', $error->getMessage());
         $query = $productId > 0 ? '?id=' . $productId : '';
         redirect('admin_products.php' . $query);
     }
 
-    if (!filter_var($data['image_url'], FILTER_VALIDATE_URL)) {
-        setFlash('error', 'La URL de la imagen no es valida.');
-        $query = $productId > 0 ? '?id=' . $productId : '';
-        redirect('admin_products.php' . $query);
-    }
-
-    if ($productId > 0) {
-        updateProduct($productId, $data);
-        setFlash('success', 'Producto actualizado.');
-        redirect('admin_products.php?id=' . $productId);
-    }
-
-    $newId = createProduct($data);
     setFlash('success', 'Producto creado.');
     redirect('admin_products.php?id=' . $newId);
 }
@@ -102,6 +94,7 @@ renderHeader('Admin productos');
       </div>
     </div>
     <form class="form" method="post">
+      <?= csrfField() ?>
       <div class="field">
         <label for="name">Nombre</label>
         <input id="name" name="name" value="<?= e((string) $formData['name']) ?>" required>
@@ -147,6 +140,7 @@ renderHeader('Admin productos');
     </form>
     <?php if ($editingProduct): ?>
       <form method="post" onsubmit="return confirm('Se eliminara este producto del catalogo.');">
+        <?= csrfField() ?>
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="id" value="<?= (int) $editingProduct['id'] ?>">
         <button class="btn danger" type="submit">Eliminar producto</button>

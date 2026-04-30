@@ -9,6 +9,8 @@ if (currentUser()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -31,8 +33,9 @@ renderHeader('Ingresar');
 <section class="card" style="max-width:720px; margin:0 auto;">
   <span class="eyebrow">Acceso</span>
   <h2>Iniciar sesion</h2>
-  <p class="muted">Usa una cuenta existente o entra con los accesos demo del pie de página.</p>
+  <p class="muted">Usa una cuenta existente para acceder a tus pedidos y datos de compra.</p>
   <form class="form" method="post">
+    <?= csrfField() ?>
     <div class="field">
       <label for="email">Correo</label>
       <input id="email" name="email" type="email" required>
@@ -43,5 +46,8 @@ renderHeader('Ingresar');
     </div>
     <button class="btn primary" type="submit">Entrar</button>
   </form>
+  <div class="actions" style="margin-top:18px;">
+    <a class="btn" href="register.php">Crear cuenta de cliente</a>
+  </div>
 </section>
 <?php renderFooter(); ?>
