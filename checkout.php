@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'customer_name' => trim($_POST['customer_name'] ?? ''),
         'customer_email' => trim($_POST['customer_email'] ?? ''),
         'customer_phone' => trim($_POST['customer_phone'] ?? ''),
+        'payment_method' => trim($_POST['payment_method'] ?? 'Efectivo'),
         'shipping_address' => trim($_POST['shipping_address'] ?? ''),
         'notes' => trim($_POST['notes'] ?? ''),
     ];
@@ -52,7 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $orderId = createOrder($user, $payload);
-        setFlash('success', 'Pedido registrado correctamente.');
+        $emailSent = sendOrderTicketEmail($orderId);
+        setFlash(
+            'success',
+            $emailSent
+                ? 'Pedido registrado correctamente. Enviamos el ticket al correo indicado.'
+                : 'Pedido registrado correctamente. El ticket esta listo; configura SMTP en XAMPP para enviarlo por correo automaticamente.'
+        );
         redirect('order.php?id=' . $orderId);
     } catch (RuntimeException $error) {
         setFlash('error', $error->getMessage());
@@ -100,6 +107,15 @@ renderHeader('Checkout');
 
       <div class="checkout-section">
         <h3>Entrega</h3>
+        <div class="field">
+          <label for="payment_method">Forma de pago</label>
+          <select id="payment_method" name="payment_method">
+            <option>Efectivo</option>
+            <option>Transferencia bancaria</option>
+            <option>Pago contra entrega</option>
+            <option>PayPal</option>
+          </select>
+        </div>
         <div class="field">
           <label for="shipping_address">Direccion donde quieres recibir el pedido</label>
           <textarea id="shipping_address" name="shipping_address" placeholder="Ciudad, sector, calle principal, numeracion y referencia..." required><?= e($user['address']) ?></textarea>

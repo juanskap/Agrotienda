@@ -2,14 +2,52 @@
 
 declare(strict_types=1);
 
+define('APP_ROOT', dirname(__DIR__));
+define('STORAGE_PATH', APP_ROOT . DIRECTORY_SEPARATOR . 'storage');
+define('DB_PATH', STORAGE_PATH . DIRECTORY_SEPARATOR . 'agrotienda.sqlite');
+define('SESSION_PATH', STORAGE_PATH . DIRECTORY_SEPARATOR . 'sessions');
+define('MAIL_LOG_PATH', STORAGE_PATH . DIRECTORY_SEPARATOR . 'mail');
+
+loadEnv();
 configureSession();
 session_start();
 
-define('APP_ROOT', dirname(__DIR__));
-define('DB_PATH', APP_ROOT . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'agrotienda.sqlite');
+function loadEnv(): void
+{
+    $envPath = APP_ROOT . DIRECTORY_SEPARATOR . '.env';
+
+    if (!is_file($envPath)) {
+        return;
+    }
+
+    $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines === false) {
+        return;
+    }
+
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
+            continue;
+        }
+
+        [$name, $value] = explode('=', $line, 2);
+        $name = trim($name);
+        $value = trim($value, " \t\n\r\0\x0B\"'");
+
+        if ($name !== '' && getenv($name) === false) {
+            putenv($name . '=' . $value);
+            $_ENV[$name] = $value;
+        }
+    }
+}
 
 function configureSession(): void
 {
+    if (!is_dir(SESSION_PATH)) {
+        mkdir(SESSION_PATH, 0777, true);
+    }
+
     $secure = (
         (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
         (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443
@@ -25,6 +63,7 @@ function configureSession(): void
     ]);
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
+    ini_set('session.save_path', SESSION_PATH);
 }
 
 function db(): PDO
@@ -35,8 +74,8 @@ function db(): PDO
         return $pdo;
     }
 
-    if (!is_dir(dirname(DB_PATH))) {
-        mkdir(dirname(DB_PATH), 0777, true);
+    if (!is_dir(STORAGE_PATH)) {
+        mkdir(STORAGE_PATH, 0777, true);
     }
 
     $needsSetup = !file_exists(DB_PATH);
@@ -93,6 +132,7 @@ function initializeDatabase(PDO $pdo): void
             customer_email TEXT NOT NULL,
             customer_phone TEXT NOT NULL,
             shipping_address TEXT NOT NULL,
+            payment_method TEXT NOT NULL DEFAULT "Efectivo",
             notes TEXT DEFAULT "",
             subtotal REAL NOT NULL,
             shipping REAL NOT NULL,
@@ -132,7 +172,18 @@ function migrateDatabase(PDO $pdo): void
     }
 
     syncProductImages($pdo);
+    migrateOrdersTable($pdo);
     createContactMessagesTable($pdo);
+}
+
+function migrateOrdersTable(PDO $pdo): void
+{
+    $columns = $pdo->query('PRAGMA table_info(orders)')->fetchAll();
+    $columnNames = array_column($columns, 'name');
+
+    if (!in_array('payment_method', $columnNames, true)) {
+        $pdo->exec('ALTER TABLE orders ADD COLUMN payment_method TEXT NOT NULL DEFAULT "Efectivo"');
+    }
 }
 
 function createContactMessagesTable(PDO $pdo): void
@@ -717,10 +768,10 @@ function createOrder(array $user, array $payload): int
     try {
         $stmt = $pdo->prepare(
             'INSERT INTO orders (
-                user_id, customer_name, customer_email, customer_phone, shipping_address, notes,
+                user_id, customer_name, customer_email, customer_phone, shipping_address, payment_method, notes,
                 subtotal, shipping, total, status, created_at
             ) VALUES (
-                :user_id, :customer_name, :customer_email, :customer_phone, :shipping_address, :notes,
+                :user_id, :customer_name, :customer_email, :customer_phone, :shipping_address, :payment_method, :notes,
                 :subtotal, :shipping, :total, :status, :created_at
             )'
         );
@@ -731,6 +782,7 @@ function createOrder(array $user, array $payload): int
             'customer_email' => $payload['customer_email'],
             'customer_phone' => $payload['customer_phone'],
             'shipping_address' => $payload['shipping_address'],
+            'payment_method' => $payload['payment_method'] ?? 'Efectivo',
             'notes' => $payload['notes'],
             'subtotal' => $totals['subtotal'],
             'shipping' => $totals['shipping'],
@@ -828,6 +880,92 @@ function orderById(int $orderId, ?int $userId = null): ?array
     $order['items'] = $items->fetchAll();
 
     return $order;
+}
+
+function sendOrderTicketEmail(int $orderId): bool
+{
+    $order = orderById($orderId);
+
+    if (!$order) {
+        return false;
+    }
+
+    $lines = [
+        'Ticket Agrotienda',
+        'Pedido #' . $order['id'],
+        'Estado: ' . $order['status'],
+        'Cliente: ' . $order['customer_name'],
+        'Telefono: ' . $order['customer_phone'],
+        'Forma de pago: ' . ($order['payment_method'] ?? 'Efectivo'),
+        'Direccion: ' . $order['shipping_address'],
+        '',
+        'Productos:',
+    ];
+
+    foreach ($order['items'] as $item) {
+        $lines[] = '- ' . $item['product_name'] . ' x' . $item['quantity'] . ' = ' . money((float) $item['line_total']);
+    }
+
+    $lines[] = '';
+    $lines[] = 'Subtotal: ' . money((float) $order['subtotal']);
+    $lines[] = 'Envio: ' . money((float) $order['shipping']);
+    $lines[] = 'Total: ' . money((float) $order['total']);
+
+    $headers = [
+        'From: ' . mailFromName() . ' <' . mailFromAddress() . '>',
+        'Content-Type: text/plain; charset=UTF-8',
+    ];
+
+    if (mailMode() === 'log') {
+        return writeOrderTicketLog($order, $lines, $headers);
+    }
+
+    return @mail(
+        $order['customer_email'],
+        'Ticket de compra Agrotienda #' . $order['id'],
+        implode(PHP_EOL, $lines),
+        implode("\r\n", $headers)
+    );
+}
+
+function mailMode(): string
+{
+    $mode = strtolower((string) getenv('MAIL_MODE'));
+
+    return in_array($mode, ['log', 'mail'], true) ? $mode : 'log';
+}
+
+function mailFromAddress(): string
+{
+    $from = getenv('MAIL_FROM');
+
+    return is_string($from) && $from !== '' ? $from : 'no-reply@agrotienda.local';
+}
+
+function mailFromName(): string
+{
+    $name = getenv('MAIL_FROM_NAME');
+
+    return is_string($name) && $name !== '' ? $name : 'Agrotienda';
+}
+
+function writeOrderTicketLog(array $order, array $lines, array $headers): bool
+{
+    if (!is_dir(MAIL_LOG_PATH)) {
+        mkdir(MAIL_LOG_PATH, 0777, true);
+    }
+
+    $content = [
+        'To: ' . $order['customer_email'],
+        'Subject: Ticket de compra Agrotienda #' . $order['id'],
+        implode("\r\n", $headers),
+        '',
+        implode(PHP_EOL, $lines),
+    ];
+
+    $file = MAIL_LOG_PATH . DIRECTORY_SEPARATOR . 'pedido-' . (int) $order['id'] . '.txt';
+
+    return file_put_contents($file, implode(PHP_EOL, $content)) !== false;
 }
 
 function createContactMessage(array $payload): int

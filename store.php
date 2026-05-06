@@ -4,6 +4,22 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/app/layout.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
+    $productId = (int) ($_POST['product_id'] ?? 0);
+    $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
+
+    try {
+        addToCart($productId, $quantity);
+        setFlash('success', 'Producto agregado al carrito.');
+        redirect('cart.php');
+    } catch (RuntimeException $error) {
+        setFlash('error', $error->getMessage());
+        redirect('store.php');
+    }
+}
+
 $search = trim($_GET['q'] ?? '');
 $category = trim($_GET['category'] ?? '');
 $products = allProducts($search ?: null, $category ?: null);
@@ -52,6 +68,10 @@ renderHeader('Tienda', [
     <article class="product product-storefront">
       <a class="product-media" href="product.php?id=<?= (int) $product['id'] ?>">
         <img src="<?= e(productImage($product)) ?>" alt="<?= e($product['name']) ?>" loading="lazy">
+        <span class="product-quick-view">
+          <strong>Ver detalle</strong>
+          <small><?= e($product['short_description']) ?></small>
+        </span>
       </a>
       <div class="product-body">
         <small><?= e($product['category']) ?> | <?= e($product['brand']) ?></small>
@@ -61,9 +81,12 @@ renderHeader('Tienda', [
           <span class="price"><?= money((float) $product['price']) ?></span>
           <span class="stock-pill">Stock <?= (int) $product['stock'] ?></span>
         </div>
-        <div class="actions">
-          <a class="btn primary full" href="product.php?id=<?= (int) $product['id'] ?>">Comprar</a>
-        </div>
+        <form class="quick-buy-form" method="post">
+          <?= csrfField() ?>
+          <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+          <input type="hidden" name="quantity" value="1">
+          <button class="btn primary full" type="submit">Comprar</button>
+        </form>
       </div>
     </article>
   <?php endforeach; ?>
