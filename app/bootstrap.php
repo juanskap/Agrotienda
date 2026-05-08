@@ -157,6 +157,7 @@ function initializeDatabase(PDO $pdo): void
         )'
     );
 
+    createInventoryMovementsTable($pdo);
     createContactMessagesTable($pdo);
 
     seedDatabase($pdo);
@@ -173,6 +174,7 @@ function migrateDatabase(PDO $pdo): void
 
     syncProductImages($pdo);
     migrateOrdersTable($pdo);
+    createInventoryMovementsTable($pdo);
     createContactMessagesTable($pdo);
 }
 
@@ -366,7 +368,22 @@ function currentUser(): ?array
 
 function loginUser(array $user): void
 {
-    session_regenerate_id(true);
+    if (@session_regenerate_id(false)) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            session_id(),
+            [
+                'expires' => 0,
+                'path' => $params['path'],
+                'domain' => $params['domain'],
+                'secure' => (bool) $params['secure'],
+                'httponly' => (bool) $params['httponly'],
+                'samesite' => $params['samesite'] ?? 'Lax',
+            ]
+        );
+    }
+
     $_SESSION['user_id'] = (int) $user['id'];
 }
 
@@ -617,6 +634,91 @@ function productHasOrders(int $id): bool
     return (bool) $stmt->fetchColumn();
 }
 
+function applyInventoryMovement(
+    int $productId,
+    string $movementType,
+    int $quantity,
+    string $note,
+    ?int $userId = null,
+    ?int $orderId = null,
+    ?PDO $pdo = null
+): void {
+    $pdo = $pdo ?: db();
+    $movementType = strtolower(trim($movementType));
+    $note = trim($note);
+
+    if (!in_array($movementType, ['entrada', 'salida', 'ajuste'], true)) {
+        throw new InvalidArgumentException('Tipo de movimiento no valido.');
+    }
+
+    if ($quantity < 0 || ($movementType !== 'ajuste' && $quantity === 0)) {
+        throw new InvalidArgumentException('La cantidad del movimiento no es valida.');
+    }
+
+    $productStmt = $pdo->prepare('SELECT * FROM products WHERE id = :id LIMIT 1');
+    $productStmt->execute(['id' => $productId]);
+    $product = $productStmt->fetch();
+
+    if (!$product) {
+        throw new InvalidArgumentException('Producto no encontrado.');
+    }
+
+    $stockBefore = (int) $product['stock'];
+
+    if ($movementType === 'entrada') {
+        $stockAfter = $stockBefore + $quantity;
+    } elseif ($movementType === 'salida') {
+        if ($quantity > $stockBefore) {
+            throw new InvalidArgumentException('No puedes registrar una salida mayor al stock disponible.');
+        }
+        $stockAfter = $stockBefore - $quantity;
+    } else {
+        $stockAfter = $quantity;
+    }
+
+    $update = $pdo->prepare('UPDATE products SET stock = :stock WHERE id = :id');
+    $update->execute([
+        'stock' => $stockAfter,
+        'id' => $productId,
+    ]);
+
+    $movement = $pdo->prepare(
+        'INSERT INTO inventory_movements (
+            product_id, order_id, user_id, movement_type, quantity, stock_before, stock_after, note, created_at
+        ) VALUES (
+            :product_id, :order_id, :user_id, :movement_type, :quantity, :stock_before, :stock_after, :note, :created_at
+        )'
+    );
+    $movement->execute([
+        'product_id' => $productId,
+        'order_id' => $orderId,
+        'user_id' => $userId,
+        'movement_type' => $movementType,
+        'quantity' => $quantity,
+        'stock_before' => $stockBefore,
+        'stock_after' => $stockAfter,
+        'note' => $note,
+        'created_at' => date('c'),
+    ]);
+}
+
+function recentInventoryMovements(int $limit = 12): array
+{
+    $limit = max(1, min(80, $limit));
+    $stmt = db()->prepare(
+        'SELECT inventory_movements.*, products.name AS product_name, users.name AS user_name
+         FROM inventory_movements
+         INNER JOIN products ON products.id = inventory_movements.product_id
+         LEFT JOIN users ON users.id = inventory_movements.user_id
+         ORDER BY inventory_movements.id DESC
+         LIMIT :limit'
+    );
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+}
+
 function categories(): array
 {
     $stmt = db()->query('SELECT DISTINCT category FROM products ORDER BY category ASC');
@@ -798,12 +900,6 @@ function createOrder(array $user, array $payload): int
              VALUES (:order_id, :product_id, :product_name, :quantity, :unit_price, :line_total)'
         );
 
-        $stockStmt = $pdo->prepare(
-            'UPDATE products
-             SET stock = stock - :quantity
-             WHERE id = :id AND stock >= :quantity'
-        );
-
         foreach ($totals['items'] as $item) {
             $currentProduct = productById((int) $item['id']);
             if (!$currentProduct || availableStock($currentProduct) < (int) $item['quantity']) {
@@ -819,14 +915,15 @@ function createOrder(array $user, array $payload): int
                 'line_total' => $item['line_total'],
             ]);
 
-            $stockStmt->execute([
-                'quantity' => $item['quantity'],
-                'id' => $item['id'],
-            ]);
-
-            if ($stockStmt->rowCount() !== 1) {
-                throw new RuntimeException('El stock cambio mientras procesabamos tu pedido.');
-            }
+            applyInventoryMovement(
+                (int) $item['id'],
+                'salida',
+                (int) $item['quantity'],
+                'Venta registrada en pedido #' . $orderId,
+                (int) $user['id'],
+                $orderId,
+                $pdo
+            );
         }
 
         $userUpdate = $pdo->prepare(
@@ -925,6 +1022,27 @@ function sendOrderTicketEmail(int $orderId): bool
         'Ticket de compra Agrotienda #' . $order['id'],
         implode(PHP_EOL, $lines),
         implode("\r\n", $headers)
+    );
+}
+
+function createInventoryMovementsTable(PDO $pdo): void
+{
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS inventory_movements (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL,
+            order_id INTEGER DEFAULT NULL,
+            user_id INTEGER DEFAULT NULL,
+            movement_type TEXT NOT NULL,
+            quantity INTEGER NOT NULL,
+            stock_before INTEGER NOT NULL,
+            stock_after INTEGER NOT NULL,
+            note TEXT NOT NULL DEFAULT "",
+            created_at TEXT NOT NULL,
+            FOREIGN KEY(product_id) REFERENCES products(id),
+            FOREIGN KEY(order_id) REFERENCES orders(id),
+            FOREIGN KEY(user_id) REFERENCES users(id)
+        )'
     );
 }
 

@@ -10,17 +10,8 @@ $recentOrders = db()->query('SELECT * FROM orders ORDER BY id DESC LIMIT 8')->fe
 $recentMessages = recentContactMessages(6);
 $products = allProducts();
 
-renderHeader('Admin');
+renderHeader('Admin', ['admin_area' => true]);
 ?>
-<section class="card hero">
-  <span class="eyebrow">Zona privada</span>
-  <h2>Panel de administracion</h2>
-  <p class="muted">Esta version ya lee datos reales de usuarios, productos y pedidos guardados en la base local.</p>
-  <div class="actions">
-    <a class="btn primary" href="admin_products.php">Gestionar productos</a>
-  </div>
-</section>
-
 <section class="stats">
   <article class="stat"><strong><?= $stats['products'] ?></strong><span class="muted">productos</span></article>
   <article class="stat"><strong><?= $stats['customers'] ?></strong><span class="muted">clientes</span></article>
@@ -52,6 +43,9 @@ renderHeader('Admin');
 
   <article class="card">
     <h3>Inventario base</h3>
+    <div class="actions" style="margin-bottom:12px;">
+      <a class="btn" href="admin_inventory.php">Abrir inventario completo</a>
+    </div>
     <div class="list">
       <?php foreach ($products as $product): ?>
         <div class="list-item">
@@ -68,6 +62,9 @@ renderHeader('Admin');
 
 <section class="card">
   <h3>Mensajes de contacto</h3>
+  <div class="actions" style="margin-bottom:12px;">
+    <a class="btn" href="admin_messages.php">Abrir bandeja</a>
+  </div>
   <?php if (!$recentMessages): ?>
     <div class="empty">Todavia no hay mensajes recibidos.</div>
   <?php else: ?>

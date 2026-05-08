@@ -1,0 +1,209 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/app/layout.php';
+
+$user = requireAdmin();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    requireValidCsrfToken();
+
+    $productId = (int) ($_POST['product_id'] ?? 0);
+    $movementType = trim((string) ($_POST['movement_type'] ?? ''));
+    $quantity = trim((string) ($_POST['quantity'] ?? ''));
+    $note = trim((string) ($_POST['note'] ?? ''));
+
+    if ($productId <= 0 || !ctype_digit($quantity)) {
+        setFlash('error', 'Selecciona un producto e ingresa una cantidad valida.');
+        redirect('admin_inventory.php');
+    }
+
+    try {
+        applyInventoryMovement(
+            $productId,
+            $movementType,
+            (int) $quantity,
+            $note !== '' ? $note : 'Movimiento manual de inventario',
+            (int) $user['id']
+        );
+        setFlash('success', 'Movimiento de inventario registrado.');
+    } catch (InvalidArgumentException $error) {
+        setFlash('error', $error->getMessage());
+    }
+
+    redirect('admin_inventory.php');
+}
+
+$search = trim((string) ($_GET['q'] ?? ''));
+$filter = trim((string) ($_GET['filter'] ?? ''));
+
+$sql = 'SELECT * FROM products WHERE 1=1';
+$params = [];
+
+if ($search !== '') {
+    $sql .= ' AND (name LIKE :search OR brand LIKE :search OR category LIKE :search)';
+    $params['search'] = '%' . $search . '%';
+}
+
+if ($filter === 'low') {
+    $sql .= ' AND stock > 0 AND stock <= 10';
+} elseif ($filter === 'empty') {
+    $sql .= ' AND stock = 0';
+}
+
+$sql .= ' ORDER BY stock ASC, name ASC';
+
+$stmt = db()->prepare($sql);
+$stmt->execute($params);
+$products = $stmt->fetchAll();
+$allProducts = allProducts();
+$movements = recentInventoryMovements(12);
+
+renderHeader('Inventario', ['admin_area' => true]);
+?>
+<section class="card hero">
+  <span class="eyebrow">Inventario</span>
+  <h2>Control de entradas y salidas</h2>
+  <p class="muted">Registra movimientos, consulta existencias y conserva historial de cada cambio de stock.</p>
+  <div class="actions">
+    <a class="btn primary" href="admin_products.php">Crear producto</a>
+    <a class="btn" href="admin.php">Volver al resumen</a>
+  </div>
+</section>
+
+<section class="card">
+  <h3>Registrar movimiento</h3>
+  <form class="inventory-movement-form" method="post">
+    <?= csrfField() ?>
+    <div class="field">
+      <label for="product_id">Producto</label>
+      <select id="product_id" name="product_id" required>
+        <option value="">Selecciona producto</option>
+        <?php foreach ($allProducts as $product): ?>
+          <option value="<?= (int) $product['id'] ?>"><?= e($product['name']) ?> | Stock <?= (int) $product['stock'] ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    <div class="field">
+      <label for="movement_type">Movimiento</label>
+      <select id="movement_type" name="movement_type" required>
+        <option value="entrada">Entrada</option>
+        <option value="salida">Salida</option>
+        <option value="ajuste">Ajuste</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="quantity">Cantidad</label>
+      <input id="quantity" name="quantity" type="number" min="0" required>
+    </div>
+    <div class="field">
+      <label for="note">Motivo</label>
+      <input id="note" name="note" placeholder="Compra a proveedor, merma, correccion...">
+    </div>
+    <button class="btn primary" type="submit">Registrar</button>
+  </form>
+  <p class="hint">En ajuste, la cantidad se toma como el stock final correcto. En entrada y salida, la cantidad suma o resta al stock actual.</p>
+</section>
+
+<section class="card">
+  <form class="admin-toolbar" method="get">
+    <div class="field">
+      <label for="q">Buscar producto</label>
+      <input id="q" name="q" value="<?= e($search) ?>" placeholder="Nombre, marca o categoria">
+    </div>
+    <div class="field">
+      <label for="filter">Filtro</label>
+      <select id="filter" name="filter">
+        <option value="" <?= $filter === '' ? 'selected' : '' ?>>Todos</option>
+        <option value="low" <?= $filter === 'low' ? 'selected' : '' ?>>Stock bajo</option>
+        <option value="empty" <?= $filter === 'empty' ? 'selected' : '' ?>>Agotados</option>
+      </select>
+    </div>
+    <button class="btn primary" type="submit">Filtrar</button>
+  </form>
+</section>
+
+<section class="card">
+  <h3>Productos en inventario</h3>
+  <?php if (!$products): ?>
+    <div class="empty">No hay productos con esos filtros.</div>
+  <?php else: ?>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($products as $product): ?>
+            <?php
+              $stock = (int) $product['stock'];
+              $status = $stock === 0 ? 'Agotado' : ($stock <= 10 ? 'Stock bajo' : 'Disponible');
+              $statusClass = $stock === 0 ? 'danger' : ($stock <= 10 ? 'warning' : 'success');
+            ?>
+            <tr>
+              <td><?= e($product['name']) ?></td>
+              <td><?= e($product['category']) ?></td>
+              <td><?= money((float) $product['price']) ?></td>
+              <td><strong><?= $stock ?></strong></td>
+              <td><span class="status-pill <?= e($statusClass) ?>"><?= e($status) ?></span></td>
+              <td class="table-actions">
+                <a class="btn" href="admin_products.php?id=<?= (int) $product['id'] ?>">Editar</a>
+                <a class="btn" href="product.php?id=<?= (int) $product['id'] ?>">Ver</a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  <?php endif; ?>
+</section>
+
+<section class="card">
+  <h3>Movimientos recientes</h3>
+  <?php if (!$movements): ?>
+    <div class="empty">Todavia no hay movimientos de inventario registrados.</div>
+  <?php else: ?>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Antes</th>
+            <th>Despues</th>
+            <th>Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($movements as $movement): ?>
+            <tr>
+              <td><?= e(date('d/m/Y H:i', strtotime($movement['created_at']))) ?></td>
+              <td>
+                <strong><?= e($movement['product_name']) ?></strong>
+                <?php if ($movement['order_id']): ?>
+                  <span class="table-subtext">Pedido #<?= (int) $movement['order_id'] ?></span>
+                <?php endif; ?>
+              </td>
+              <td><span class="status-pill <?= e($movement['movement_type'] === 'entrada' ? 'success' : ($movement['movement_type'] === 'salida' ? 'danger' : 'warning')) ?>"><?= e(ucfirst($movement['movement_type'])) ?></span></td>
+              <td><?= (int) $movement['quantity'] ?></td>
+              <td><?= (int) $movement['stock_before'] ?></td>
+              <td><?= (int) $movement['stock_after'] ?></td>
+              <td><?= e($movement['note']) ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  <?php endif; ?>
+</section>
+<?php renderFooter(); ?>

@@ -73,7 +73,7 @@ $formData = $editingProduct ?: [
     'description' => '',
 ];
 
-renderHeader('Admin productos');
+renderHeader('Admin productos', ['admin_area' => true]);
 ?>
 <section class="card hero">
   <span class="eyebrow">Admin productos</span>
