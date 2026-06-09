@@ -57,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setFlash(
             'success',
             $emailSent
-                ? 'Pedido registrado correctamente. Enviamos el ticket al correo indicado.'
-                : 'Pedido registrado correctamente. El ticket esta listo; configura SMTP en XAMPP para enviarlo por correo automaticamente.'
+                ? 'Compra finalizada. Felicidades, tu pedido fue registrado. Enviamos el ticket al correo indicado.'
+                : 'Compra finalizada. Felicidades, tu pedido fue registrado. El ticket esta listo en el servidor.'
         );
         redirect('order.php?id=' . $orderId);
     } catch (RuntimeException $error) {

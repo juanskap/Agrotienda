@@ -15,16 +15,20 @@ if (!$product) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     requireValidCsrfToken();
 
+    $redirectTo = trim($_POST['_redirect'] ?? 'product.php?id=' . $productId);
     $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
     try {
         addToCart($productId, $quantity);
         setFlash('success', 'Producto agregado al carrito.');
-        redirect('cart.php');
+        redirect($redirectTo);
     } catch (RuntimeException $error) {
         setFlash('error', $error->getMessage());
-        redirect('product.php?id=' . $productId);
+        redirect($redirectTo);
     }
 }
+
+$user = currentUser();
+$isFav = $user && isFavorite((int) $user['id'], $productId);
 
 renderHeader('Producto');
 ?>
@@ -32,6 +36,13 @@ renderHeader('Producto');
   <article class="card">
     <div class="product-media is-detail">
       <img src="<?= e(productImage($product)) ?>" alt="<?= e($product['name']) ?>">
+      <?php if ($user): ?>
+        <form class="fav-form is-detail-fav" method="post" action="favorite.php">
+          <?= csrfField() ?>
+          <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+          <button class="fav-btn <?= $isFav ? 'is-fav' : '' ?>" type="submit" title="Favorito"><?= $isFav ? '★' : '☆' ?></button>
+        </form>
+      <?php endif; ?>
     </div>
   </article>
   <article class="card">
@@ -44,6 +55,7 @@ renderHeader('Producto');
     </div>
     <form class="form" method="post">
       <?= csrfField() ?>
+      <input type="hidden" name="_redirect" value="<?= e($_SERVER['REQUEST_URI']) ?>">
       <div class="field">
         <label for="quantity">Cantidad</label>
         <input id="quantity" type="number" name="quantity" value="1" min="1" max="<?= (int) $product['stock'] ?>">

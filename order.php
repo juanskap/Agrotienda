@@ -17,9 +17,9 @@ renderHeader('Pedido');
 ?>
 <section class="order-confirmation card">
   <div>
-    <span class="eyebrow">Compra confirmada</span>
-    <h2>Tu pedido fue registrado correctamente</h2>
-    <p class="muted">Generamos el ticket del pedido #<?= (int) $order['id'] ?> para el correo <?= e($order['customer_email']) ?>. Si el correo del servidor esta configurado, se enviara automaticamente.</p>
+    <span class="eyebrow">Compra finalizada</span>
+    <h2>Felicidades, tu pedido fue registrado exitosamente</h2>
+    <p class="muted">Generamos el ticket del pedido #<?= (int) $order['id'] ?> para el correo <?= e($order['customer_email']) ?>. Te notificaremos cuando el pedido sea procesado.</p>
   </div>
   <div class="order-actions">
     <button class="btn primary" type="button" onclick="window.print()">Imprimir ticket</button>

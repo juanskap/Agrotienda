@@ -148,6 +148,29 @@ function renderFooter(): void
       </div>
     </footer>
   </div>
+  <script>
+  document.querySelectorAll('.quick-buy-form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var btn = form.querySelector('.btn');
+      var originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '\u2713';
+      var data = new FormData(form);
+      fetch(form.getAttribute('action') || window.location.href, { method: 'POST', body: data })
+        .then(function() {
+          setTimeout(function() {
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }, 1500);
+        })
+        .catch(function() {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        });
+    });
+  });
+  </script>
 </body>
 </html>
 <?php

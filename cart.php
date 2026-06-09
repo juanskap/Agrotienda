@@ -16,13 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $quantities = $_POST['qty'] ?? [];
+    $selected = $_POST['selected'] ?? [];
     $removeId = (int) ($_POST['remove_id'] ?? 0);
 
     if ($removeId > 0) {
         unset($quantities[$removeId]);
+        unset($selected[$removeId]);
     }
 
-    updateCart($quantities);
+    updateCart($quantities, $selected);
     $messages = syncCartInventory();
 
     if ($action === 'confirm') {
@@ -105,6 +107,7 @@ if ($inventoryMessages) {
 }
 
 $totals = cartTotals();
+$allCartItems = cartItems();
 $user = currentUser();
 $addressValue = $user ? (string) $user['address'] : '';
 
@@ -115,7 +118,15 @@ renderHeader('Carrito');
     <div>
       <span class="sale-kicker">Carrito</span>
       <h1>Venta actual</h1>
-      <p><?= $totals['items'] ? count($totals['items']) . ' producto' . (count($totals['items']) === 1 ? '' : 's') . ' agregado' . (count($totals['items']) === 1 ? '' : 's') . '.' : 'No hay productos agregados.' ?></p>
+      <p><?php
+        $totalCount = count($allCartItems);
+        $selCount = count(array_filter($allCartItems, fn($i) => $i['selected']));
+        if ($totalCount) {
+          echo $totalCount . ' producto' . ($totalCount === 1 ? '' : 's') . ' (' . $selCount . ' seleccionado' . ($selCount === 1 ? ')' : 's)');
+        } else {
+          echo 'No hay productos agregados.';
+        }
+      ?></p>
     </div>
     <div class="sale-header-actions">
       <?php if ($totals['items']): ?>
@@ -150,6 +161,9 @@ renderHeader('Carrito');
       <div class="sale-items">
         <?php foreach ($totals['items'] as $item): ?>
           <article class="sale-item">
+            <label class="sale-checkbox-label">
+              <input class="sale-checkbox" type="checkbox" form="cart-update-form" name="selected[<?= (int) $item['id'] ?>]" value="1" <?= $item['selected'] ? 'checked' : '' ?>>
+            </label>
             <button class="sale-remove" type="submit" form="cart-update-form" name="remove_id" value="<?= (int) $item['id'] ?>" aria-label="Quitar <?= e($item['name']) ?>" formnovalidate>x</button>
             <a class="sale-item-media" href="product.php?id=<?= (int) $item['id'] ?>">
               <img src="<?= e(productImage($item)) ?>" alt="<?= e($item['name']) ?>" loading="lazy">

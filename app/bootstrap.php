@@ -159,6 +159,8 @@ function initializeDatabase(PDO $pdo): void
 
     createInventoryMovementsTable($pdo);
     createContactMessagesTable($pdo);
+    createPasswordResetsTable($pdo);
+    createFavoritesTable($pdo);
 
     seedDatabase($pdo);
 }
@@ -176,6 +178,8 @@ function migrateDatabase(PDO $pdo): void
     migrateOrdersTable($pdo);
     createInventoryMovementsTable($pdo);
     createContactMessagesTable($pdo);
+    createPasswordResetsTable($pdo);
+    createFavoritesTable($pdo);
 }
 
 function migrateOrdersTable(PDO $pdo): void
@@ -199,6 +203,34 @@ function createContactMessagesTable(PDO $pdo): void
             message TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT "Nuevo",
             created_at TEXT NOT NULL
+        )'
+    );
+}
+
+function createPasswordResetsTable(PDO $pdo): void
+{
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS password_resets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL,
+            token TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        )'
+    );
+}
+
+function createFavoritesTable(PDO $pdo): void
+{
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS favorites (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY(user_id) REFERENCES users(id),
+            FOREIGN KEY(product_id) REFERENCES products(id),
+            UNIQUE(user_id, product_id)
         )'
     );
 }
@@ -339,6 +371,148 @@ function seedPassword(string $envName): string
     }
 
     return bin2hex(random_bytes(16));
+}
+
+function createPasswordReset(string $email): string
+{
+    $stmt = db()->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+    $stmt->execute(['email' => $email]);
+    $user = $stmt->fetch();
+
+    if (!$user) {
+        return '';
+    }
+
+    $del = db()->prepare('DELETE FROM password_resets WHERE email = :email');
+    $del->execute(['email' => $email]);
+
+    $token = bin2hex(random_bytes(32));
+    $expiresAt = date('c', strtotime('+1 hour'));
+
+    $stmt = db()->prepare(
+        'INSERT INTO password_resets (email, token, expires_at, created_at)
+         VALUES (:email, :token, :expires_at, :created_at)'
+    );
+    $stmt->execute([
+        'email' => $email,
+        'token' => $token,
+        'expires_at' => $expiresAt,
+        'created_at' => date('c'),
+    ]);
+
+    writePasswordResetMail($email, $token);
+
+    return $token;
+}
+
+function validatePasswordResetToken(string $token): ?array
+{
+    $stmt = db()->prepare('SELECT * FROM password_resets WHERE token = :token LIMIT 1');
+    $stmt->execute(['token' => $token]);
+    $row = $stmt->fetch();
+
+    if (!$row) {
+        return null;
+    }
+
+    if (strtotime($row['expires_at']) < time()) {
+        $del = db()->prepare('DELETE FROM password_resets WHERE id = :id');
+        $del->execute(['id' => $row['id']]);
+        return null;
+    }
+
+    return $row;
+}
+
+function completePasswordReset(string $token, string $newPassword): bool
+{
+    $row = validatePasswordResetToken($token);
+
+    if (!$row) {
+        return false;
+    }
+
+    $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+
+    $stmt = db()->prepare('UPDATE users SET password_hash = :hash WHERE email = :email');
+    $stmt->execute(['hash' => $hash, 'email' => $row['email']]);
+
+    $del = db()->prepare('DELETE FROM password_resets WHERE email = :email');
+    $del->execute(['email' => $row['email']]);
+
+    return true;
+}
+
+function writePasswordResetMail(string $email, string $token): void
+{
+    if (!is_dir(MAIL_LOG_PATH)) {
+        mkdir(MAIL_LOG_PATH, 0777, true);
+    }
+
+    $resetLink = 'http://' . $_SERVER['HTTP_HOST'] . '/Agrotienda/cambiar-password.php?token=' . $token;
+
+    $content = [
+        'To: ' . $email,
+        'Subject: Recuperacion de contrasena - Agrotienda',
+        '',
+        'Hola,',
+        '',
+        'Recibimos una solicitud para restablecer tu contrasena en Agrotienda.',
+        'Haz clic en el siguiente enlace para crear una nueva contrasena:',
+        '',
+        $resetLink,
+        '',
+        'Este enlace expira en 1 hora.',
+        'Si no solicitaste este cambio, ignora este mensaje.',
+        '',
+        'Saludos,',
+        'Equipo Agrotienda',
+    ];
+
+    $file = MAIL_LOG_PATH . DIRECTORY_SEPARATOR . 'reset-' . $token . '.txt';
+    file_put_contents($file, implode(PHP_EOL, $content));
+}
+
+function toggleFavorite(int $userId, int $productId): bool
+{
+    $stmt = db()->prepare('SELECT id FROM favorites WHERE user_id = :uid AND product_id = :pid LIMIT 1');
+    $stmt->execute(['uid' => $userId, 'pid' => $productId]);
+
+    if ($stmt->fetch()) {
+        $del = db()->prepare('DELETE FROM favorites WHERE user_id = :uid AND product_id = :pid');
+        $del->execute(['uid' => $userId, 'pid' => $productId]);
+        return false;
+    }
+
+    $stmt = db()->prepare(
+        'INSERT INTO favorites (user_id, product_id, created_at) VALUES (:uid, :pid, :created_at)'
+    );
+    $stmt->execute(['uid' => $userId, 'pid' => $productId, 'created_at' => date('c')]);
+    return true;
+}
+
+function isFavorite(int $userId, int $productId): bool
+{
+    $stmt = db()->prepare('SELECT id FROM favorites WHERE user_id = :uid AND product_id = :pid LIMIT 1');
+    $stmt->execute(['uid' => $userId, 'pid' => $productId]);
+    return (bool) $stmt->fetch();
+}
+
+function userFavorites(int $userId): array
+{
+    $stmt = db()->prepare(
+        'SELECT p.* FROM favorites f JOIN products p ON p.id = f.product_id
+         WHERE f.user_id = :uid ORDER BY f.created_at DESC'
+    );
+    $stmt->execute(['uid' => $userId]);
+    return $stmt->fetchAll();
+}
+
+function favoriteProductIds(int $userId): array
+{
+    $stmt = db()->prepare('SELECT product_id FROM favorites WHERE user_id = :uid');
+    $stmt->execute(['uid' => $userId]);
+    return array_column($stmt->fetchAll(), 'product_id');
 }
 
 function redirect(string $path): never
@@ -730,6 +904,18 @@ function cart(): array
     return $_SESSION['cart'] ?? [];
 }
 
+function cartSelected(): array
+{
+    return $_SESSION['cart_selected'] ?? [];
+}
+
+function markCartSelected(int $productId, bool $selected): void
+{
+    $sel = cartSelected();
+    $sel[$productId] = $selected;
+    $_SESSION['cart_selected'] = $sel;
+}
+
 function syncCartInventory(): array
 {
     $cart = cart();
@@ -790,11 +976,16 @@ function addToCart(int $productId, int $quantity): void
 
     $cart[$productId] = $nextQty;
     $_SESSION['cart'] = $cart;
+
+    $sel = cartSelected();
+    $sel[$productId] = true;
+    $_SESSION['cart_selected'] = $sel;
 }
 
-function updateCart(array $quantities): void
+function updateCart(array $quantities, array $selected = []): void
 {
     $next = [];
+    $sel = [];
     foreach ($quantities as $productId => $quantity) {
         $qty = (int) $quantity;
         if ($qty > 0) {
@@ -808,28 +999,43 @@ function updateCart(array $quantities): void
                 continue;
             }
 
-            $next[(int) $productId] = min($qty, $stock);
+            $pid = (int) $productId;
+            $next[$pid] = min($qty, $stock);
+            $sel[$pid] = !empty($selected[$pid]);
         }
     }
     $_SESSION['cart'] = $next;
+    $_SESSION['cart_selected'] = $sel;
 }
 
 function clearCart(): void
 {
     $_SESSION['cart'] = [];
+    $_SESSION['cart_selected'] = [];
 }
 
-function cartItems(): array
+function cartItems(bool $onlySelected = false): array
 {
+    $sel = cartSelected();
+    $hasSelection = !empty($sel);
+
     $items = [];
     foreach (cart() as $productId => $quantity) {
-        $product = productById((int) $productId);
+        $pid = (int) $productId;
+        $isSelected = !$hasSelection || !empty($sel[$pid]);
+
+        if ($onlySelected && !$isSelected) {
+            continue;
+        }
+
+        $product = productById($pid);
         if (!$product) {
             continue;
         }
 
         $product['quantity'] = (int) $quantity;
         $product['line_total'] = $product['price'] * $product['quantity'];
+        $product['selected'] = $isSelected;
         $items[] = $product;
     }
 
@@ -838,7 +1044,7 @@ function cartItems(): array
 
 function cartTotals(): array
 {
-    $items = cartItems();
+    $items = cartItems(true);
     $subtotal = 0.0;
     foreach ($items as $item) {
         $subtotal += (float) $item['line_total'];

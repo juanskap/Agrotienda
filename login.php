@@ -47,6 +47,7 @@ renderHeader('Ingresar');
     <button class="btn primary" type="submit">Entrar</button>
   </form>
   <div class="actions" style="margin-top:18px;">
+    <a class="btn" href="recuperar-password.php">Recuperar contrasena</a>
     <a class="btn" href="register.php">Crear cuenta de cliente</a>
   </div>
 </section>

@@ -10,13 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productId = (int) ($_POST['product_id'] ?? 0);
     $quantity = max(1, (int) ($_POST['quantity'] ?? 1));
 
+    $redirectTo = trim($_POST['_redirect'] ?? 'store.php');
+
     try {
         addToCart($productId, $quantity);
         setFlash('success', 'Producto agregado al carrito.');
-        redirect('cart.php');
+        redirect($redirectTo);
     } catch (RuntimeException $error) {
         setFlash('error', $error->getMessage());
-        redirect('store.php');
+        redirect($redirectTo);
     }
 }
 
@@ -30,6 +32,9 @@ $total = count($allProducts);
 $totalPaginas = (int) ceil($total / $porPagina);
 $inicio = ($pagina - 1) * $porPagina;
 $products = array_slice($allProducts, $inicio, $porPagina);
+
+$user = currentUser();
+$favIds = $user ? favoriteProductIds((int) $user['id']) : [];
 
 renderHeader('Tienda', [
     'search' => $search,
@@ -80,19 +85,26 @@ renderHeader('Tienda', [
           <small><?= e($product['short_description']) ?></small>
         </span>
       </a>
+      <?php if ($user): ?>
+        <form class="fav-form" method="post" action="favorite.php">
+          <?= csrfField() ?>
+          <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+          <button class="fav-btn <?= in_array((int) $product['id'], $favIds, true) ? 'is-fav' : '' ?>" type="submit" title="Favorito"><?= in_array((int) $product['id'], $favIds, true) ? '★' : '☆' ?></button>
+        </form>
+      <?php endif; ?>
       <div class="product-body">
         <small><?= e($product['category']) ?> | <?= e($product['brand']) ?></small>
         <h3><?= e($product['name']) ?></h3>
         <p class="muted"><?= e($product['short_description']) ?></p>
         <div class="product-purchase">
           <span class="price"><?= money((float) $product['price']) ?></span>
-          <span class="stock-pill">Stock <?= (int) $product['stock'] ?></span>
         </div>
         <form class="quick-buy-form" method="post">
           <?= csrfField() ?>
           <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
           <input type="hidden" name="quantity" value="1">
-          <button class="btn primary full" type="submit">Comprar</button>
+          <input type="hidden" name="_redirect" value="<?= e($_SERVER['REQUEST_URI']) ?>">
+          <button class="btn primary full" type="submit">Agregar al carrito</button>
         </form>
       </div>
     </article>

@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $orders = ordersForUser((int) $user['id']);
+$favorites = userFavorites((int) $user['id']);
 $user = currentUser();
 
 renderHeader('Mi cuenta');
@@ -80,5 +81,50 @@ renderHeader('Mi cuenta');
       </div>
     <?php endif; ?>
   </aside>
+</section>
+
+<section class="section-head" style="margin-top:32px;">
+  <div>
+    <span class="eyebrow">Favoritos</span>
+    <h2>Mis productos favoritos</h2>
+  </div>
+  <a class="btn" href="store.php">Ir a la tienda</a>
+</section>
+
+<section class="product-grid storefront-grid">
+  <?php if (!$favorites): ?>
+    <div class="card empty">No tienes productos favoritos todavia. Marca la estrella en cualquier producto para agregarlo.</div>
+  <?php endif; ?>
+  <?php foreach ($favorites as $product): ?>
+    <article class="product product-storefront">
+      <a class="product-media" href="product.php?id=<?= (int) $product['id'] ?>">
+        <img src="<?= e(productImage($product)) ?>" alt="<?= e($product['name']) ?>" loading="lazy">
+        <span class="product-quick-view">
+          <strong>Ver detalle</strong>
+          <small><?= e($product['short_description']) ?></small>
+        </span>
+      </a>
+      <form class="fav-form" method="post" action="favorite.php">
+        <?= csrfField() ?>
+        <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+        <button class="fav-btn is-fav" type="submit" title="Quitar de favoritos">★</button>
+      </form>
+      <div class="product-body">
+        <small><?= e($product['category']) ?> | <?= e($product['brand']) ?></small>
+        <h3><?= e($product['name']) ?></h3>
+        <p class="muted"><?= e($product['short_description']) ?></p>
+        <div class="product-purchase">
+          <span class="price"><?= money((float) $product['price']) ?></span>
+        </div>
+        <form class="quick-buy-form" method="post" action="store.php">
+          <?= csrfField() ?>
+          <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+          <input type="hidden" name="quantity" value="1">
+          <input type="hidden" name="_redirect" value="<?= e($_SERVER['REQUEST_URI']) ?>">
+          <button class="btn primary full" type="submit">Agregar al carrito</button>
+        </form>
+      </div>
+    </article>
+  <?php endforeach; ?>
 </section>
 <?php renderFooter(); ?>
