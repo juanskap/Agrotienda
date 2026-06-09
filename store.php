@@ -22,7 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $search = trim($_GET['q'] ?? '');
 $category = trim($_GET['category'] ?? '');
-$products = allProducts($search ?: null, $category ?: null);
+$allProducts = allProducts($search ?: null, $category ?: null);
+
+$porPagina = 12;
+$pagina = max(1, (int) ($_GET['pagina'] ?? 1));
+$total = count($allProducts);
+$totalPaginas = (int) ceil($total / $porPagina);
+$inicio = ($pagina - 1) * $porPagina;
+$products = array_slice($allProducts, $inicio, $porPagina);
 
 renderHeader('Tienda', [
     'search' => $search,
@@ -91,4 +98,18 @@ renderHeader('Tienda', [
     </article>
   <?php endforeach; ?>
 </section>
+
+<?php if ($totalPaginas > 1): ?>
+  <nav class="pagination">
+    <?php if ($pagina > 1): ?>
+      <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $pagina - 1])) ?>">&laquo; Anterior</a>
+    <?php endif; ?>
+    <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+      <a class="page-link <?= $i === $pagina ? 'is-active' : '' ?>" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>"><?= $i ?></a>
+    <?php endfor; ?>
+    <?php if ($pagina < $totalPaginas): ?>
+      <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $pagina + 1])) ?>">Siguiente &raquo;</a>
+    <?php endif; ?>
+  </nav>
+<?php endif; ?>
 <?php renderFooter(); ?>
