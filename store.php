@@ -85,19 +85,19 @@ renderHeader('Tienda', [
           <small><?= e($product['short_description']) ?></small>
         </span>
       </a>
-      <?php if ($user): ?>
-        <form class="fav-form" method="post" action="favorite.php">
-          <?= csrfField() ?>
-          <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-          <button class="fav-btn <?= in_array((int) $product['id'], $favIds, true) ? 'is-fav' : '' ?>" type="submit" title="Favorito"><?= in_array((int) $product['id'], $favIds, true) ? '★' : '☆' ?></button>
-        </form>
-      <?php endif; ?>
       <div class="product-body">
         <small><?= e($product['category']) ?> | <?= e($product['brand']) ?></small>
         <h3><?= e($product['name']) ?></h3>
         <p class="muted"><?= e($product['short_description']) ?></p>
         <div class="product-purchase">
           <span class="price"><?= money((float) $product['price']) ?></span>
+          <?php if ($user): ?>
+            <form class="fav-form" method="post" action="favorite.php">
+              <?= csrfField() ?>
+              <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+              <button class="fav-btn <?= in_array((int) $product['id'], $favIds, true) ? 'is-fav' : '' ?>" type="submit" title="Favorito"><?= in_array((int) $product['id'], $favIds, true) ? '★' : '☆' ?></button>
+            </form>
+          <?php endif; ?>
         </div>
         <form class="quick-buy-form" method="post">
           <?= csrfField() ?>

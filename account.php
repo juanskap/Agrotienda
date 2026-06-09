@@ -104,17 +104,17 @@ renderHeader('Mi cuenta');
           <small><?= e($product['short_description']) ?></small>
         </span>
       </a>
-      <form class="fav-form" method="post" action="favorite.php">
-        <?= csrfField() ?>
-        <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-        <button class="fav-btn is-fav" type="submit" title="Quitar de favoritos">★</button>
-      </form>
       <div class="product-body">
         <small><?= e($product['category']) ?> | <?= e($product['brand']) ?></small>
         <h3><?= e($product['name']) ?></h3>
         <p class="muted"><?= e($product['short_description']) ?></p>
         <div class="product-purchase">
           <span class="price"><?= money((float) $product['price']) ?></span>
+          <form class="fav-form" method="post" action="favorite.php">
+            <?= csrfField() ?>
+            <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+            <button class="fav-btn is-fav" type="submit" title="Quitar de favoritos">★</button>
+          </form>
         </div>
         <form class="quick-buy-form" method="post" action="store.php">
           <?= csrfField() ?>

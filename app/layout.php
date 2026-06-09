@@ -149,25 +149,38 @@ function renderFooter(): void
     </footer>
   </div>
   <script>
-  document.querySelectorAll('.quick-buy-form').forEach(function(form) {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      var btn = form.querySelector('.btn');
-      var originalText = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = '\u2713';
-      var data = new FormData(form);
-      fetch(form.getAttribute('action') || window.location.href, { method: 'POST', body: data })
-        .then(function() {
+  function submitForm(form) {
+    var btn = form.querySelector('.btn, .fav-btn');
+    var isFav = form.classList.contains('fav-form');
+    var data = new FormData(form);
+    fetch(form.getAttribute('action') || window.location.href, { method: 'POST', body: data })
+      .then(function(r) { return r.text(); })
+      .then(function() {
+        if (isFav) {
+          var star = btn;
+          if (star.classList.contains('is-fav')) {
+            star.classList.remove('is-fav');
+            star.textContent = '\u2606';
+          } else {
+            star.classList.add('is-fav');
+            star.textContent = '\u2605';
+          }
+        } else {
+          var originalText = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = '\u2713';
           setTimeout(function() {
             btn.disabled = false;
             btn.textContent = originalText;
           }, 1500);
-        })
-        .catch(function() {
-          btn.disabled = false;
-          btn.textContent = originalText;
-        });
+        }
+      });
+  }
+
+  document.querySelectorAll('.quick-buy-form, .fav-form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      submitForm(form);
     });
   });
   </script>

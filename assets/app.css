@@ -1,14 +1,15 @@
 :root {
-  --bg: #f4f4f4;
-  --surface: #ffffff;
-  --surface-soft: #f8f8f8;
-  --surface-muted: #efefef;
-  --border: #e2e2e2;
-  --text: #222222;
-  --muted: #656565;
-  --primary: #ff3a3a;
-  --primary-dark: #bb1018;
-  --accent: #ffcf2f;
+  --bg: #f4f7f0;
+  --surface: #fafdf7;
+  --surface-soft: #eaf2e4;
+  --surface-muted: #dde8d4;
+  --border: #c6d8b5;
+  --text: #1e2f1a;
+  --muted: #5a7153;
+  --primary: #4a7c3f;
+  --primary-dark: #2d5a25;
+  --secondary: #7a9e6c;
+  --accent: #d99f3c;
   --success-bg: #eaf6ea;
   --success-text: #24572d;
   --danger-bg: #fdeaea;
@@ -738,9 +739,9 @@ textarea {
 .promo-copy h1,
 .store-hero h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 4vw, 4.8rem);
-  line-height: 0.98;
-  text-transform: uppercase;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  line-height: 1.2;
+  text-transform: none;
 }
 
 .promo-copy p,
@@ -909,7 +910,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: linear-gradient(135deg, #ff6b3d, #ff2f49);
+  background: linear-gradient(135deg, #6d8a34, #4a7c3f);
   color: #fff;
 }
 
@@ -2689,31 +2690,22 @@ th { color: var(--muted); }
 
 /* Favorites star */
 .fav-form {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
   margin: 0;
-}
-
-.product-media {
-  position: relative;
 }
 
 .fav-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: none;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e0a120;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  font-size: 1.3rem;
+  background: #fff;
+  font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
-  color: #bbb;
+  color: #ddd;
   transition: all 0.2s;
   padding: 0;
 }
@@ -2721,20 +2713,23 @@ th { color: var(--muted); }
 .fav-btn:hover {
   transform: scale(1.15);
   color: #e0a120;
-  background: #fff;
+  background: #fff8e8;
 }
 
 .fav-btn.is-fav {
   color: #e0a120;
+  background: #fff8e8;
+  border-color: #e0a120;
 }
 
 .fav-form.is-detail-fav {
+  position: absolute;
   top: 12px;
   right: 12px;
 }
 
-.product-storefront:hover .fav-btn {
-  opacity: 1;
+.product-media {
+  position: relative;
 }
 
 /* Cart checkbox */
