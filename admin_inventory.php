@@ -37,28 +37,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $search = trim((string) ($_GET['q'] ?? ''));
 $filter = trim((string) ($_GET['filter'] ?? ''));
+$categoryFilter = trim((string) ($_GET['category'] ?? ''));
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$perPage = 10;
+$offset = ($page - 1) * $perPage;
 
-$sql = 'SELECT * FROM products WHERE 1=1';
+$where = 'WHERE 1=1';
 $params = [];
+$countParams = [];
 
 if ($search !== '') {
-    $sql .= ' AND (name LIKE :search OR brand LIKE :search OR category LIKE :search)';
+    $where .= ' AND (name LIKE :search OR brand LIKE :search OR category LIKE :search)';
     $params['search'] = '%' . $search . '%';
+    $countParams['search'] = '%' . $search . '%';
 }
 
 if ($filter === 'low') {
-    $sql .= ' AND stock > 0 AND stock <= 10';
+    $where .= ' AND stock > 0 AND stock <= 10';
 } elseif ($filter === 'empty') {
-    $sql .= ' AND stock = 0';
+    $where .= ' AND stock = 0';
 }
 
-$sql .= ' ORDER BY stock ASC, name ASC';
+if ($categoryFilter !== '') {
+    $where .= ' AND category = :category';
+    $params['category'] = $categoryFilter;
+    $countParams['category'] = $categoryFilter;
+}
+
+$countStmt = db()->prepare("SELECT COUNT(*) FROM products $where");
+$countStmt->execute($countParams);
+$totalProducts = (int) $countStmt->fetchColumn();
+$totalPages = max(1, (int) ceil($totalProducts / $perPage));
+
+if ($page > $totalPages) {
+    $page = $totalPages;
+    $offset = ($page - 1) * $perPage;
+}
+
+$sql = "SELECT * FROM products $where ORDER BY stock ASC, name ASC LIMIT :limit OFFSET :offset";
+$params['limit'] = $perPage;
+$params['offset'] = $offset;
 
 $stmt = db()->prepare($sql);
 $stmt->execute($params);
 $products = $stmt->fetchAll();
 $allProducts = allProducts();
 $movements = recentInventoryMovements(12);
+$categoryList = categories();
 
 renderHeader('Inventario', ['admin_area' => true]);
 ?>
@@ -113,7 +138,16 @@ renderHeader('Inventario', ['admin_area' => true]);
       <input id="q" name="q" value="<?= e($search) ?>" placeholder="Nombre, marca o categoria">
     </div>
     <div class="field">
-      <label for="filter">Filtro</label>
+      <label for="category">Categoria</label>
+      <select id="category" name="category" onchange="location=this.form.action+'?'+new URLSearchParams(new FormData(this.form))+'#productos-inventario'">
+        <option value="" <?= $categoryFilter === '' ? 'selected' : '' ?>>Todas</option>
+        <?php foreach ($categoryList as $cat): ?>
+          <option value="<?= e($cat) ?>" <?= $categoryFilter === $cat ? 'selected' : '' ?>><?= e($cat) ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    <div class="field">
+      <label for="filter">Estado</label>
       <select id="filter" name="filter">
         <option value="" <?= $filter === '' ? 'selected' : '' ?>>Todos</option>
         <option value="low" <?= $filter === 'low' ? 'selected' : '' ?>>Stock bajo</option>
@@ -124,7 +158,7 @@ renderHeader('Inventario', ['admin_area' => true]);
   </form>
 </section>
 
-<section class="card">
+<section class="card" id="productos-inventario">
   <h3>Productos en inventario</h3>
   <?php if (!$products): ?>
     <div class="empty">No hay productos con esos filtros.</div>
@@ -162,6 +196,17 @@ renderHeader('Inventario', ['admin_area' => true]);
           <?php endforeach; ?>
         </tbody>
       </table>
+    </div>
+  <?php endif; ?>
+  <?php if ($totalPages > 1): ?>
+    <div class="pagination">
+      <?php if ($page > 1): ?>
+        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Anterior</a>
+      <?php endif; ?>
+      <span class="pagination-info">Pagina <?= $page ?> de <?= $totalPages ?> (<?= $totalProducts ?> productos)</span>
+      <?php if ($page < $totalPages): ?>
+        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Siguiente</a>
+      <?php endif; ?>
     </div>
   <?php endif; ?>
 </section>

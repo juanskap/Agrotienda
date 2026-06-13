@@ -1231,6 +1231,47 @@ function sendOrderTicketEmail(int $orderId): bool
     );
 }
 
+function ordersToday(): array
+{
+    $stmt = db()->prepare(
+        "SELECT * FROM orders WHERE strftime('%Y-%m-%d', created_at) = strftime('%Y-%m-%d', 'now') ORDER BY id DESC"
+    );
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function ordersYesterday(): array
+{
+    $stmt = db()->prepare(
+        "SELECT * FROM orders WHERE strftime('%Y-%m-%d', created_at) = strftime('%Y-%m-%d', 'now', '-1 day') ORDER BY id DESC"
+    );
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function lowStockProducts(int $threshold = 5): array
+{
+    $stmt = db()->prepare('SELECT * FROM products WHERE stock > 0 AND stock <= :threshold ORDER BY stock ASC');
+    $stmt->bindValue(':threshold', $threshold, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+
+function pendingOrdersCount(): int
+{
+    return (int) db()->query("SELECT COUNT(*) FROM orders WHERE status = 'Recibido'")->fetchColumn();
+}
+
+function revenueThisMonth(): float
+{
+    $stmt = db()->prepare(
+        "SELECT COALESCE(SUM(total), 0) FROM orders
+         WHERE strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now')"
+    );
+    $stmt->execute();
+    return (float) $stmt->fetchColumn();
+}
+
 function createInventoryMovementsTable(PDO $pdo): void
 {
     $pdo->exec(

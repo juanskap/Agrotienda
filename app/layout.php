@@ -56,18 +56,9 @@ function renderHeader(string $title, array $options = []): void
     <header class="topbar">
       <div class="brand-wrap">
         <a class="brand" href="<?= $isAdminArea ? 'admin.php' : 'index.php' ?>"><span class="brand-mark">A</span>Agro<span>Tienda</span></a>
-        <p class="brand-subtitle"><?= $isAdminArea ? 'Panel privado para administrar productos, pedidos y mensajes.' : 'Compra insumos, herramientas y soluciones para tu campo.' ?></p>
+        <p class="brand-subtitle"><?= $isAdminArea ? 'Administrador: ' . e($user['name']) . ' | Panel privado para administrar productos, pedidos y mensajes.' : 'Compra insumos, herramientas y soluciones para tu campo.' ?></p>
       </div>
-      <?php if ($isAdminArea): ?>
-        <nav class="nav admin-nav-main">
-          <a class="<?= trim($isCurrent('admin.php')) ?>" href="admin.php">Dashboard</a>
-          <a class="<?= $isCurrentGroup(['admin_inventory.php', 'admin_products.php']) ?>" href="admin_inventory.php">Inventario</a>
-          <a class="<?= trim($isCurrent('admin_orders.php')) ?>" href="admin_orders.php">Pedidos</a>
-          <a class="<?= trim($isCurrent('admin_messages.php')) ?>" href="admin_messages.php">Mensajes</a>
-          <a class="<?= trim($isCurrent('admin_users.php')) ?>" href="admin_users.php">Clientes</a>
-          <a href="store.php">Catalogo publico</a>
-        </nav>
-      <?php else: ?>
+      <?php if (!$isAdminArea): ?>
         <form class="searchbar" method="get" action="store.php">
           <input type="search" name="q" value="<?= e($searchValue) ?>" placeholder="Buscar semillas, fertilizantes, herramientas...">
           <?php if ($activeCategory !== ''): ?>
