@@ -13,6 +13,21 @@ if (!$order) {
     redirect('account.php');
 }
 
+$allowedStatuses = ['Recibido', 'Preparando', 'Enviado', 'Entregado', 'Cancelado'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user['role'] === 'admin') {
+    requireValidCsrfToken();
+
+    $status = trim((string) ($_POST['status'] ?? ''));
+
+    if (in_array($status, $allowedStatuses, true)) {
+        $stmt = db()->prepare('UPDATE orders SET status = :status WHERE id = :id');
+        $stmt->execute(['status' => $status, 'id' => $orderId]);
+        setFlash('success', 'Pedido #' . $orderId . ' actualizado a ' . $status . '.');
+        redirect('admin_orders.php?status=Recibido#pedidos-lista');
+    }
+}
+
 renderHeader('Pedido');
 ?>
 <section class="order-confirmation card">
@@ -33,7 +48,23 @@ renderHeader('Pedido');
       <strong class="print-brand">Agrotienda</strong>
       <span class="eyebrow">Pedido #<?= (int) $order['id'] ?></span>
       <h2>Detalle del pedido</h2>
-      <p class="muted">Estado <?= e($order['status']) ?> | Fecha <?= e(date('d/m/Y H:i', strtotime($order['created_at']))) ?></p>
+      <p class="muted">
+        <?php if ($user['role'] === 'admin'): ?>
+          Estado
+          <form method="post" style="display:inline-flex;gap:6px;align-items:center;margin:0 4px">
+            <?= csrfField() ?>
+            <select name="status" style="width:auto;min-width:120px;border-radius:999px;padding:4px 10px;min-height:32px;font-size:0.85rem">
+              <?php foreach ($allowedStatuses as $s): ?>
+                <option value="<?= e($s) ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= e($s) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button class="btn primary" type="submit" style="min-height:32px;padding:0 14px;font-size:0.85rem;border-radius:999px">Actualizar</button>
+          </form>
+          | Fecha <?= e(date('d/m/Y H:i', strtotime($order['created_at']))) ?>
+        <?php else: ?>
+          Estado <?= e($order['status']) ?> | Fecha <?= e(date('d/m/Y H:i', strtotime($order['created_at']))) ?>
+        <?php endif; ?>
+      </p>
     </div>
     <div class="order-actions">
       <button class="btn primary" type="button" onclick="window.print()">Imprimir</button>

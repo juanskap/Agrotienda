@@ -82,7 +82,6 @@ $stmt = db()->prepare($sql);
 $stmt->execute($params);
 $products = $stmt->fetchAll();
 $allProducts = allProducts();
-$movements = recentInventoryMovements(12);
 $categoryList = categories();
 
 renderHeader('Inventario', ['admin_area' => true]);
@@ -201,54 +200,14 @@ renderHeader('Inventario', ['admin_area' => true]);
   <?php if ($totalPages > 1): ?>
     <div class="pagination">
       <?php if ($page > 1): ?>
-        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">Anterior</a>
+        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>#productos-inventario">Anterior</a>
       <?php endif; ?>
       <span class="pagination-info">Pagina <?= $page ?> de <?= $totalPages ?> (<?= $totalProducts ?> productos)</span>
       <?php if ($page < $totalPages): ?>
-        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Siguiente</a>
+        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>#productos-inventario">Siguiente</a>
       <?php endif; ?>
     </div>
   <?php endif; ?>
 </section>
 
-<section class="card">
-  <h3>Movimientos recientes</h3>
-  <?php if (!$movements): ?>
-    <div class="empty">Todavia no hay movimientos de inventario registrados.</div>
-  <?php else: ?>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Producto</th>
-            <th>Tipo</th>
-            <th>Cantidad</th>
-            <th>Antes</th>
-            <th>Despues</th>
-            <th>Motivo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php foreach ($movements as $movement): ?>
-            <tr>
-              <td><?= e(date('d/m/Y H:i', strtotime($movement['created_at']))) ?></td>
-              <td>
-                <strong><?= e($movement['product_name']) ?></strong>
-                <?php if ($movement['order_id']): ?>
-                  <span class="table-subtext">Pedido #<?= (int) $movement['order_id'] ?></span>
-                <?php endif; ?>
-              </td>
-              <td><span class="status-pill <?= e($movement['movement_type'] === 'entrada' ? 'success' : ($movement['movement_type'] === 'salida' ? 'danger' : 'warning')) ?>"><?= e(ucfirst($movement['movement_type'])) ?></span></td>
-              <td><?= (int) $movement['quantity'] ?></td>
-              <td><?= (int) $movement['stock_before'] ?></td>
-              <td><?= (int) $movement['stock_after'] ?></td>
-              <td><?= e($movement['note']) ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </div>
-  <?php endif; ?>
-</section>
 <?php renderFooter(); ?>

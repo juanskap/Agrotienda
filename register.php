@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user->execute(['email' => $email]);
     loginUser($user->fetch());
     setFlash('success', 'Cuenta creada correctamente.');
-    redirect('account.php');
+    redirect('store.php');
 }
 
 renderHeader('Registro');

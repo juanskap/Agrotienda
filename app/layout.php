@@ -75,7 +75,14 @@ function renderHeader(string $title, array $options = []): void
           <a class="<?= $isCurrentGroup(['store.php', 'product.php']) ?>" href="store.php"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16"></path><path d="M5 10l2-5h10l2 5"></path><path d="M6 10v9h12v-9"></path><path d="M9 19v-5h6v5"></path></svg> Tienda</a>
           <a class="<?= trim($isCurrent('cart.php')) ?>" href="cart.php"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11h10.2l2-7H7"></path><circle cx="10" cy="20" r="1.5"></circle><circle cx="17" cy="20" r="1.5"></circle></svg> Carrito</a>
           <?php if ($user): ?>
-            <a class="<?= $isCurrentGroup(['account.php', 'order.php']) ?>" href="account.php">Mi cuenta</a>
+            <div class="dropdown">
+              <a class="dropdown-trigger <?= $isCurrentGroup(['account.php', 'order.php']) ?>" href="account.php">Perfil <span class="dropdown-arrow">▾</span></a>
+              <div class="dropdown-menu">
+                <a href="account.php#mi-cuenta">Mi cuenta</a>
+                <a href="account.php#mis-pedidos">Pedidos</a>
+                <a href="account.php#favoritos">Favoritos</a>
+              </div>
+            </div>
             <?php if ($user['role'] === 'admin'): ?>
               <a class="<?= $isCurrentGroup(['admin.php', 'admin_products.php']) ?>" href="admin.php">Admin</a>
             <?php endif; ?>

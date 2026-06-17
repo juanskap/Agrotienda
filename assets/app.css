@@ -1979,11 +1979,37 @@ textarea {
 }
 
 .footer {
-  padding: 20px 22px;
+  position: relative;
+  padding: 28px 22px 20px;
   display: flex;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+  background: linear-gradient(135deg, #eaf2e4 0%, #f4f7f0 40%, #fafdf7 100%);
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--secondary), var(--accent));
+  border-radius: 14px 14px 0 0;
+}
+
+.footer::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(74, 124, 63, 0.06), rgba(217, 159, 60, 0.04));
+  pointer-events: none;
 }
 
 @media (max-width: 768px) {
@@ -2880,5 +2906,82 @@ th { color: var(--muted); }
 
   a {
     text-decoration: none;
+  }
+}
+
+.dropdown {
+  position: relative;
+  display: inline-flex;
+}
+
+.dropdown-trigger {
+  cursor: pointer;
+}
+
+.dropdown-arrow {
+  font-size: 0.7rem;
+  margin-left: 2px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  min-width: 160px;
+  margin-top: 0;
+  padding: 6px;
+  padding-top: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+  display: block;
+}
+
+.dropdown-menu a {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: left;
+  background: transparent;
+  border: none;
+}
+
+.dropdown-menu a:hover {
+  background: var(--surface-soft);
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    padding: 0 0 0 12px;
+    margin-top: 0;
+    background: transparent;
+  }
+
+  .dropdown-menu a {
+    padding: 8px 10px;
+    font-size: 0.85rem;
   }
 }

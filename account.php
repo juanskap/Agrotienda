@@ -35,7 +35,7 @@ $user = currentUser();
 renderHeader('Mi cuenta');
 ?>
 <section class="split">
-  <article class="card">
+  <article class="card" id="mi-cuenta">
     <span class="eyebrow">Perfil</span>
     <h2>Mi cuenta</h2>
     <form class="form" method="post">
@@ -62,7 +62,7 @@ renderHeader('Mi cuenta');
     </form>
   </article>
 
-  <aside class="card">
+  <aside class="card" id="mis-pedidos">
     <h2>Mis pedidos</h2>
     <?php if (!$orders): ?>
       <div class="empty">Todavia no tienes pedidos. Cuando compres algo apareceran aqui.</div>
@@ -83,6 +83,7 @@ renderHeader('Mi cuenta');
   </aside>
 </section>
 
+<section id="favoritos">
 <section class="section-head" style="margin-top:32px;">
   <div>
     <span class="eyebrow">Favoritos</span>

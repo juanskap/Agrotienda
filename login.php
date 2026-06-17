@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/app/layout.php';
 
-if (currentUser()) {
-    redirect('account.php');
+$loggedUser = currentUser();
+if ($loggedUser) {
+    redirect($loggedUser['role'] === 'admin' ? 'admin.php' : 'store.php');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($password, $user['password_hash'])) {
         loginUser($user);
         setFlash('success', 'Sesion iniciada correctamente.');
-        redirect($user['role'] === 'admin' ? 'admin.php' : 'account.php');
+        redirect($user['role'] === 'admin' ? 'admin.php' : 'store.php');
     }
 
     setFlash('error', 'Correo o contrasena incorrectos.');
