@@ -47,7 +47,7 @@ renderHeader('Tienda', [
     <h1>Encuentra lo que necesitas para tu produccion</h1>
     <p><?= $category !== '' ? 'Categoria activa: ' . e($category) . '.' : 'Explora el catalogo completo, filtra por categoria y compra con inventario actualizado.' ?></p>
   </div>
-  <a class="btn light" href="cart.php"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11h10.2l2-7H7"></path><circle cx="10" cy="20" r="1.5"></circle><circle cx="17" cy="20" r="1.5"></circle></svg> Ver carrito</a>
+  <a class="btn light" href="cart.php"><i class="fa-solid fa-cart-shopping"></i> Ver carrito</a>
 </section>
 
 <section class="store-toolbar">
@@ -67,7 +67,7 @@ renderHeader('Tienda', [
     </div>
     <div class="field">
       <label>&nbsp;</label>
-      <button class="btn primary full" type="submit"><span class="btn-symbol">⌕</span> Filtrar productos</button>
+      <button class="btn primary full" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Filtrar productos</button>
     </div>
   </form>
 </section>
@@ -95,7 +95,7 @@ renderHeader('Tienda', [
             <form class="fav-form" method="post" action="favorite.php">
               <?= csrfField() ?>
               <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-              <button class="fav-btn <?= in_array((int) $product['id'], $favIds, true) ? 'is-fav' : '' ?>" type="submit" title="Favorito"><?= in_array((int) $product['id'], $favIds, true) ? '★' : '☆' ?></button>
+              <button class="fav-btn <?= in_array((int) $product['id'], $favIds, true) ? 'is-fav' : '' ?>" type="submit" title="Favorito"><i class="fa-<?= in_array((int) $product['id'], $favIds, true) ? 'solid' : 'regular' ?> fa-heart"></i></button>
             </form>
           <?php endif; ?>
         </div>
@@ -104,7 +104,7 @@ renderHeader('Tienda', [
           <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
           <input type="hidden" name="quantity" value="1">
           <input type="hidden" name="_redirect" value="<?= e($_SERVER['REQUEST_URI']) ?>">
-          <button class="btn primary full" type="submit"><span class="btn-symbol">+</span> Agregar al carrito</button>
+          <button class="btn primary full" type="submit"><i class="fa-solid fa-cart-plus"></i> Agregar al carrito</button>
         </form>
       </div>
     </article>

@@ -25,7 +25,7 @@ $statusClasses = [
 renderHeader('Admin', ['admin_area' => true]);
 ?>
 <section class="toolbar">
-  <a class="btn primary" href="admin_products.php">+ Nuevo producto</a>
+  <a class="btn primary" href="admin_products.php"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
   <a class="btn" href="admin_orders.php?status=Recibido">Pedidos pendientes <?= $pendingCount > 0 ? '(' . $pendingCount . ')' : '' ?></a>
   <a class="btn" href="admin_messages.php?status=Nuevo">Mensajes sin leer</a>
   <a class="btn" href="admin_inventory.php?filter=low">Stock bajo</a>

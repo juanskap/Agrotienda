@@ -876,23 +876,6 @@ function applyInventoryMovement(
     ]);
 }
 
-function recentInventoryMovements(int $limit = 12): array
-{
-    $limit = max(1, min(80, $limit));
-    $stmt = db()->prepare(
-        'SELECT inventory_movements.*, products.name AS product_name, users.name AS user_name
-         FROM inventory_movements
-         INNER JOIN products ON products.id = inventory_movements.product_id
-         LEFT JOIN users ON users.id = inventory_movements.user_id
-         ORDER BY inventory_movements.id DESC
-         LIMIT :limit'
-    );
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
-
-    return $stmt->fetchAll();
-}
-
 function categories(): array
 {
     $stmt = db()->query('SELECT DISTINCT category FROM products ORDER BY category ASC');

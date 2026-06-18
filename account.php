@@ -114,7 +114,7 @@ renderHeader('Mi cuenta');
           <form class="fav-form" method="post" action="favorite.php">
             <?= csrfField() ?>
             <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-            <button class="fav-btn is-fav" type="submit" title="Quitar de favoritos">★</button>
+            <button class="fav-btn is-fav" type="submit" title="Quitar de favoritos"><i class="fa-solid fa-heart"></i></button>
           </form>
         </div>
         <form class="quick-buy-form" method="post" action="store.php">

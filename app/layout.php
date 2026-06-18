@@ -25,6 +25,7 @@ function renderHeader(string $title, array $options = []): void
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= e($title) ?> | Agrotienda</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/app.css?v=<?= e($assetVersion) ?>">
 </head>
 <body class="<?= e(trim($pageClass . ($isAdminArea ? ' admin-area' : ''))) ?>">
@@ -36,20 +37,20 @@ function renderHeader(string $title, array $options = []): void
           <span>Administrador</span>
         </div>
         <div class="utilitybar-group">
-          <a href="index.php">Ver tienda publica</a>
-          <a href="logout.php">Salir</a>
+          <a href="index.php"><i class="fa-solid fa-store"></i> Ver tienda publica</a>
+          <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
         </div>
       </div>
     <?php else: ?>
       <div class="utilitybar">
         <div class="utilitybar-group">
-          <span>WhatsApp</span>
-          <span>099 000 0000</span>
-          <span>Envios a domicilio</span>
+          <span><i class="fa-brands fa-whatsapp"></i> WhatsApp</span>
+          <span><i class="fa-solid fa-phone"></i> 099 000 0000</span>
+          <span><i class="fa-solid fa-truck"></i> Envios a domicilio</span>
         </div>
         <div class="utilitybar-group">
-          <a href="contacto.php">Contacto</a>
-          <a href="nosotros.php">Nosotros</a>
+          <a href="contacto.php"><i class="fa-solid fa-envelope"></i> Contacto</a>
+          <a href="nosotros.php"><i class="fa-solid fa-seedling"></i> Nosotros</a>
         </div>
       </div>
     <?php endif; ?>
@@ -64,19 +65,19 @@ function renderHeader(string $title, array $options = []): void
           <?php if ($activeCategory !== ''): ?>
             <input type="hidden" name="category" value="<?= e($activeCategory) ?>">
           <?php endif; ?>
-          <button class="btn primary" type="submit"><span class="btn-symbol">⌕</span> Buscar</button>
+          <button class="btn primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
         </form>
       <?php endif; ?>
       <nav class="nav nav-account">
         <?php if ($isAdminArea): ?>
-          <a class="<?= $isCurrentGroup(['admin.php', 'admin_products.php']) ?>" href="admin.php">Admin</a>
-          <a href="logout.php">Salir</a>
+          <a class="<?= $isCurrentGroup(['admin.php', 'admin_products.php']) ?>" href="admin.php"><i class="fa-solid fa-user-shield"></i> Admin</a>
+          <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
         <?php else: ?>
-          <a class="<?= $isCurrentGroup(['store.php', 'product.php']) ?>" href="store.php"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16"></path><path d="M5 10l2-5h10l2 5"></path><path d="M6 10v9h12v-9"></path><path d="M9 19v-5h6v5"></path></svg> Tienda</a>
-          <a class="<?= trim($isCurrent('cart.php')) ?>" href="cart.php"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11h10.2l2-7H7"></path><circle cx="10" cy="20" r="1.5"></circle><circle cx="17" cy="20" r="1.5"></circle></svg> Carrito</a>
+          <a class="<?= $isCurrentGroup(['store.php', 'product.php']) ?>" href="store.php"><i class="fa-solid fa-store"></i> Tienda</a>
+          <a class="<?= trim($isCurrent('cart.php')) ?>" href="cart.php"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
           <?php if ($user): ?>
             <div class="dropdown">
-              <a class="dropdown-trigger <?= $isCurrentGroup(['account.php', 'order.php']) ?>" href="account.php">Perfil <span class="dropdown-arrow">▾</span></a>
+              <a class="dropdown-trigger <?= $isCurrentGroup(['account.php', 'order.php']) ?>" href="account.php"><i class="fa-solid fa-user"></i> Perfil <span class="dropdown-arrow">▾</span></a>
               <div class="dropdown-menu">
                 <a href="account.php#mi-cuenta">Mi cuenta</a>
                 <a href="account.php#mis-pedidos">Pedidos</a>
@@ -84,42 +85,54 @@ function renderHeader(string $title, array $options = []): void
               </div>
             </div>
             <?php if ($user['role'] === 'admin'): ?>
-              <a class="<?= $isCurrentGroup(['admin.php', 'admin_products.php']) ?>" href="admin.php">Admin</a>
+              <a class="<?= $isCurrentGroup(['admin.php', 'admin_products.php']) ?>" href="admin.php"><i class="fa-solid fa-user-shield"></i> Admin</a>
             <?php endif; ?>
-            <a href="logout.php">Salir</a>
+            <a href="logout.php"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
           <?php else: ?>
-            <a class="<?= trim($isCurrent('login.php')) ?>" href="login.php"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M5 20c1.5-4 12.5-4 14 0"></path></svg> Ingresar</a>
-            <a class="<?= trim($isCurrent('register.php')) ?>" href="register.php"><span class="btn-symbol">+</span> Crear cuenta</a>
+            <a class="<?= trim($isCurrent('login.php')) ?>" href="login.php"><i class="fa-solid fa-right-to-bracket"></i> Ingresar</a>
+            <a class="<?= trim($isCurrent('register.php')) ?>" href="register.php"><i class="fa-solid fa-user-plus"></i> Crear cuenta</a>
           <?php endif; ?>
         <?php endif; ?>
       </nav>
     </header>
     <?php if ($isAdminArea): ?>
       <nav class="section-nav admin-section-nav">
-        <a href="admin.php" class="<?= trim($isCurrent('admin.php')) ?>">Resumen</a>
-        <a href="admin_inventory.php" class="<?= $isCurrentGroup(['admin_inventory.php', 'admin_products.php']) ?>">Inventario</a>
-        <a href="admin_orders.php" class="<?= trim($isCurrent('admin_orders.php')) ?>">Pedidos</a>
-        <a href="admin_messages.php" class="<?= trim($isCurrent('admin_messages.php')) ?>">Mensajes</a>
-        <a href="admin_users.php" class="<?= trim($isCurrent('admin_users.php')) ?>">Clientes</a>
-        <a href="store.php">Tienda publica</a>
+        <a href="admin.php" class="<?= trim($isCurrent('admin.php')) ?>"><i class="fa-solid fa-chart-simple"></i> Resumen</a>
+        <a href="admin_inventory.php" class="<?= $isCurrentGroup(['admin_inventory.php', 'admin_products.php']) ?>"><i class="fa-solid fa-warehouse"></i> Inventario</a>
+        <a href="admin_orders.php" class="<?= trim($isCurrent('admin_orders.php')) ?>"><i class="fa-solid fa-clipboard-list"></i> Pedidos</a>
+        <a href="admin_messages.php" class="<?= trim($isCurrent('admin_messages.php')) ?>"><i class="fa-solid fa-message"></i> Mensajes</a>
+        <a href="admin_users.php" class="<?= trim($isCurrent('admin_users.php')) ?>"><i class="fa-solid fa-users"></i> Clientes</a>
+        <a href="store.php"><i class="fa-solid fa-store"></i> Tienda publica</a>
       </nav>
     <?php else: ?>
       <nav class="section-nav">
-        <a href="store.php" class="<?= $isCurrentGroup(['store.php', 'product.php']) ?>"><svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16"></path><path d="M5 10l2-5h10l2 5"></path><path d="M6 10v9h12v-9"></path><path d="M9 19v-5h6v5"></path></svg> Tienda</a>
-        <a href="index.php" class="<?= $currentPage === 'index.php' ? 'is-active' : '' ?>">Inicio</a>
-        <a href="nosotros.php" class="<?= $currentPage === 'nosotros.php' ? 'is-active' : '' ?>">Nosotros</a>
-        <a href="contacto.php" class="<?= $currentPage === 'contacto.php' ? 'is-active' : '' ?>">Contacto</a>
+        <a href="store.php" class="<?= $isCurrentGroup(['store.php', 'product.php']) ?>"><i class="fa-solid fa-store"></i> Tienda</a>
+        <a href="index.php" class="<?= $currentPage === 'index.php' ? 'is-active' : '' ?>"><i class="fa-solid fa-house"></i> Inicio</a>
+        <a href="nosotros.php" class="<?= $currentPage === 'nosotros.php' ? 'is-active' : '' ?>"><i class="fa-solid fa-seedling"></i> Nosotros</a>
+        <a href="contacto.php" class="<?= $currentPage === 'contacto.php' ? 'is-active' : '' ?>"><i class="fa-solid fa-envelope"></i> Contacto</a>
       </nav>
     <?php endif; ?>
-    <?php if (!$isAdminArea && $categoryLinks): ?>
+    <?php if (!$isAdminArea && $categoryLinks):
+      $categoryIcons = [
+        'Semillas' => 'fa-seedling',
+        'Fertilizantes' => 'fa-flask',
+        'Riego' => 'fa-water',
+        'Herramientas' => 'fa-wrench',
+        'Bioinsumos' => 'fa-leaf',
+        'Equipos' => 'fa-gear',
+        'Macetas' => 'fa-tree',
+        'Plagas' => 'fa-shield-halved',
+      ];
+    ?>
       <nav class="category-strip">
         <a class="category-link <?= $activeCategory === '' ? 'is-active' : '' ?>" href="store.php">
-          <span class="category-icon">T</span>
+          <span class="category-icon"><i class="fa-solid fa-store"></i></span>
           <span>Tienda</span>
         </a>
         <?php foreach ($categoryLinks as $categoryLink): ?>
+          <?php $catIcon = $categoryIcons[$categoryLink] ?? 'fa-tag'; ?>
           <a class="category-link <?= $activeCategory === $categoryLink ? 'is-active' : '' ?>" href="store.php?category=<?= urlencode($categoryLink) ?>">
-            <span class="category-icon"><?= e(strtoupper(substr($categoryLink, 0, 1))) ?></span>
+            <span class="category-icon"><i class="fa-solid <?= $catIcon ?>"></i></span>
             <span><?= e($categoryLink) ?></span>
           </a>
         <?php endforeach; ?>
@@ -155,13 +168,13 @@ function renderFooter(): void
       .then(function(r) { return r.text(); })
       .then(function() {
         if (isFav) {
-          var star = btn;
-          if (star.classList.contains('is-fav')) {
-            star.classList.remove('is-fav');
-            star.textContent = '\u2606';
+          var icon = btn.querySelector('.fa-heart');
+          if (btn.classList.contains('is-fav')) {
+            btn.classList.remove('is-fav');
+            icon.className = 'fa-regular fa-heart';
           } else {
-            star.classList.add('is-fav');
-            star.textContent = '\u2605';
+            btn.classList.add('is-fav');
+            icon.className = 'fa-solid fa-heart';
           }
         } else {
           var originalText = btn.textContent;

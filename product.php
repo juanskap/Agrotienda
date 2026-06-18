@@ -40,7 +40,7 @@ renderHeader('Producto');
         <form class="fav-form is-detail-fav" method="post" action="favorite.php">
           <?= csrfField() ?>
           <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-          <button class="fav-btn <?= $isFav ? 'is-fav' : '' ?>" type="submit" title="Favorito"><?= $isFav ? '★' : '☆' ?></button>
+          <button class="fav-btn <?= $isFav ? 'is-fav' : '' ?>" type="submit" title="Favorito"><i class="fa-<?= $isFav ? 'solid' : 'regular' ?> fa-heart"></i></button>
         </form>
       <?php endif; ?>
     </div>

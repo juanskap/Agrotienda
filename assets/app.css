@@ -457,7 +457,13 @@ textarea {
   display: inline-grid;
   place-items: center;
   background: rgba(255, 255, 255, 0.22);
-  font-weight: 900;
+  font-size: 1rem;
+}
+
+.category-icon .fa-solid,
+.category-icon .fa-regular,
+.category-icon .fa-brands {
+  font-size: 1rem;
 }
 
 .flash {
@@ -875,8 +881,7 @@ textarea {
   place-items: center;
   background: #fff;
   color: var(--primary-dark);
-  font-size: 1.2rem;
-  font-weight: 900;
+  font-size: 1.3rem;
 }
 
 .section-head {
@@ -1080,22 +1085,16 @@ textarea {
   border-color: #c9cfca;
 }
 
-.btn-symbol {
-  color: currentColor;
-  font-size: 1.05em;
-  line-height: 1;
-}
-
-.btn-icon {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-  color: currentColor;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
+.nav a .fa-solid,
+.nav a .fa-regular,
+.nav a .fa-brands,
+.btn .fa-solid,
+.btn .fa-regular,
+.btn .fa-brands,
+.section-nav a .fa-solid,
+.utilitybar a .fa-solid,
+.utilitybar a .fa-brands {
+  margin-right: 2px;
 }
 
 .btn.full { width: 100%; }
@@ -2801,8 +2800,7 @@ th { color: var(--muted); }
   border: 2px solid #e0a120;
   border-radius: 50%;
   background: #fff;
-  font-size: 1.5rem;
-  line-height: 1;
+  font-size: 1.2rem;
   cursor: pointer;
   color: #ddd;
   transition: all 0.2s;

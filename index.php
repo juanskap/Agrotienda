@@ -36,11 +36,11 @@ renderHeader('Inicio');
     <h1>Ofertas exclusivas para sembrar, cuidar y cosechar mejor</h1>
     <p>Encuentra semillas, fertilizantes, riego y herramientas en una vitrina pensada para comprar rapido y con inventario real.</p>
     <div class="actions">
-      <a class="btn primary" href="store.php">Comprar ahora</a>
+      <a class="btn primary" href="store.php"><i class="fa-solid fa-bag-shopping"></i> Comprar ahora</a>
       <?php if ($user): ?>
-        <a class="btn light" href="account.php">Ver mi cuenta</a>
+        <a class="btn light" href="account.php"><i class="fa-solid fa-user"></i> Ver mi cuenta</a>
       <?php else: ?>
-        <a class="btn light" href="login.php">Ingresar</a>
+        <a class="btn light" href="login.php"><i class="fa-solid fa-right-to-bracket"></i> Ingresar</a>
       <?php endif; ?>
     </div>
   </div>
@@ -58,11 +58,24 @@ renderHeader('Inicio');
 </section>
 
 <section class="spotlight-row">
+  <?php
+  $spotlightIcons = [
+    'Semillas' => 'fa-seedling',
+    'Fertilizantes' => 'fa-flask',
+    'Riego' => 'fa-water',
+    'Herramientas' => 'fa-wrench',
+    'Bioinsumos' => 'fa-leaf',
+    'Equipos' => 'fa-gear',
+    'Macetas' => 'fa-tree',
+    'Plagas' => 'fa-shield-halved',
+  ];
+  ?>
   <?php foreach ($categories as $category): ?>
+    <?php $sIcon = $spotlightIcons[$category] ?? 'fa-tag'; ?>
     <a class="spotlight-card" href="store.php?category=<?= urlencode($category) ?>">
-      <span class="spotlight-badge"><?= e(strtoupper(substr($category, 0, 1))) ?></span>
+      <span class="spotlight-badge"><i class="fa-solid <?= $sIcon ?>"></i></span>
       <strong><?= e($category) ?></strong>
-      <small>Ver mas</small>
+      <small>Ver mas <i class="fa-solid fa-arrow-right"></i></small>
     </a>
   <?php endforeach; ?>
 </section>
@@ -72,7 +85,7 @@ renderHeader('Inicio');
     <span class="eyebrow">Catalogo destacado</span>
     <h2>Lo mas buscado esta aqui</h2>
   </div>
-  <a class="btn" href="store.php">Ver catalogo completo</a>
+  <a class="btn" href="store.php"><i class="fa-solid fa-store"></i> Ver catalogo completo</a>
 </section>
 
 <section class="shop-grid">
@@ -86,7 +99,7 @@ renderHeader('Inicio');
           <a class="product-media" href="product.php?id=<?= (int) $product['id'] ?>">
             <img src="<?= e(productImage($product)) ?>" alt="<?= e($product['name']) ?>" loading="lazy">
             <span class="product-quick-view">
-              <strong>Ver detalle</strong>
+              <strong><i class="fa-solid fa-eye"></i> Ver detalle</strong>
               <small><?= e($product['short_description']) ?></small>
             </span>
           </a>
@@ -100,7 +113,7 @@ renderHeader('Inicio');
               <form class="fav-form" method="post" action="favorite.php">
                 <?= csrfField() ?>
                 <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-                <button class="fav-btn <?= in_array((int) $product['id'], $favIds, true) ? 'is-fav' : '' ?>" type="submit" title="Favorito"><?= in_array((int) $product['id'], $favIds, true) ? '★' : '☆' ?></button>
+                <button class="fav-btn <?= in_array((int) $product['id'], $favIds, true) ? 'is-fav' : '' ?>" type="submit" title="Favorito"><i class="fa-<?= in_array((int) $product['id'], $favIds, true) ? 'solid' : 'regular' ?> fa-heart"></i></button>
               </form>
             <?php endif; ?>
           </div>
@@ -109,7 +122,7 @@ renderHeader('Inicio');
             <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
             <input type="hidden" name="quantity" value="1">
             <input type="hidden" name="_redirect" value="<?= e($_SERVER['REQUEST_URI']) ?>">
-            <button class="btn primary full" type="submit">Agregar al carrito</button>
+            <button class="btn primary full" type="submit"><i class="fa-solid fa-cart-plus"></i> Agregar al carrito</button>
           </form>
         </div>
       </article>

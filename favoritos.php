@@ -44,7 +44,7 @@ renderHeader('Favoritos');
             <form class="fav-form" method="post" action="favorite.php">
               <?= csrfField() ?>
               <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-              <button class="fav-btn is-fav" type="submit" title="Quitar de favoritos">★</button>
+              <button class="fav-btn is-fav" type="submit" title="Quitar de favoritos"><i class="fa-solid fa-heart"></i></button>
             </form>
           </div>
           <form class="quick-buy-form" method="post">
@@ -52,7 +52,7 @@ renderHeader('Favoritos');
             <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
             <input type="hidden" name="quantity" value="1">
             <input type="hidden" name="_redirect" value="favoritos.php">
-            <button class="btn primary full" type="submit"><span class="btn-symbol">+</span> Agregar al carrito</button>
+            <button class="btn primary full" type="submit"><i class="fa-solid fa-cart-plus"></i> Agregar al carrito</button>
           </form>
         </div>
       </article>
