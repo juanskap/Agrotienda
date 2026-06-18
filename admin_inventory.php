@@ -91,8 +91,8 @@ renderHeader('Inventario', ['admin_area' => true]);
   <h2>Control de entradas y salidas</h2>
   <p class="muted">Registra movimientos, consulta existencias y conserva historial de cada cambio de stock.</p>
   <div class="actions">
-    <a class="btn primary" href="admin_products.php">Crear producto</a>
-    <a class="btn" href="admin.php">Volver al resumen</a>
+    <a class="btn primary" href="admin_products.php"><i class="fa-solid fa-plus"></i> Crear producto</a>
+    <a class="btn" href="admin.php"><i class="fa-solid fa-chart-simple"></i> Volver al resumen</a>
   </div>
 </section>
 
@@ -125,7 +125,7 @@ renderHeader('Inventario', ['admin_area' => true]);
       <label for="note">Motivo</label>
       <input id="note" name="note" placeholder="Compra a proveedor, merma, correccion...">
     </div>
-    <button class="btn primary" type="submit">Registrar</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-check"></i> Registrar</button>
   </form>
   <p class="hint">En ajuste, la cantidad se toma como el stock final correcto. En entrada y salida, la cantidad suma o resta al stock actual.</p>
 </section>
@@ -153,7 +153,7 @@ renderHeader('Inventario', ['admin_area' => true]);
         <option value="empty" <?= $filter === 'empty' ? 'selected' : '' ?>>Agotados</option>
       </select>
     </div>
-    <button class="btn primary" type="submit">Filtrar</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-filter"></i> Filtrar</button>
   </form>
 </section>
 
@@ -188,8 +188,8 @@ renderHeader('Inventario', ['admin_area' => true]);
               <td><strong><?= $stock ?></strong></td>
               <td><span class="status-pill <?= e($statusClass) ?>"><?= e($status) ?></span></td>
               <td class="table-actions">
-                <a class="btn" href="admin_products.php?id=<?= (int) $product['id'] ?>">Editar</a>
-                <a class="btn" href="product.php?id=<?= (int) $product['id'] ?>">Ver</a>
+                <a class="btn" href="admin_products.php?id=<?= (int) $product['id'] ?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                <a class="btn" href="product.php?id=<?= (int) $product['id'] ?>"><i class="fa-solid fa-eye"></i> Ver</a>
               </td>
             </tr>
           <?php endforeach; ?>
@@ -200,11 +200,11 @@ renderHeader('Inventario', ['admin_area' => true]);
   <?php if ($totalPages > 1): ?>
     <div class="pagination">
       <?php if ($page > 1): ?>
-        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>#productos-inventario">Anterior</a>
+        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>#productos-inventario"><i class="fa-solid fa-chevron-left"></i> Anterior</a>
       <?php endif; ?>
       <span class="pagination-info">Pagina <?= $page ?> de <?= $totalPages ?> (<?= $totalProducts ?> productos)</span>
       <?php if ($page < $totalPages): ?>
-        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>#productos-inventario">Siguiente</a>
+        <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>#productos-inventario">Siguiente <i class="fa-solid fa-chevron-right"></i></a>
       <?php endif; ?>
     </div>
   <?php endif; ?>

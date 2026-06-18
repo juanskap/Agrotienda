@@ -1,3 +1,4 @@
+html { scroll-behavior: smooth; }
 :root {
   --bg: #f4f7f0;
   --surface: #fafdf7;
@@ -25,6 +26,8 @@
 body {
   margin: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background:
     linear-gradient(135deg, rgba(0, 0, 0, 0.03) 25%, transparent 25%) 0 0 / 48px 48px,
@@ -33,6 +36,20 @@ body {
     linear-gradient(45deg, rgba(0, 0, 0, 0.03) 25%, transparent 25%) 0 0 / 48px 48px,
     #f7f7f7;
   color: var(--text);
+}
+
+.shell {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 12px 20px;
+}
+
+.shell main.page {
+  flex: 1;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -62,14 +79,6 @@ select:focus-visible,
 textarea:focus-visible {
   outline: 3px solid rgba(255, 58, 58, 0.34);
   outline-offset: 3px;
-}
-
-.shell {
-  width: 100%;
-  margin: 0 auto;
-  display: grid;
-  gap: 14px;
-  padding: 0 12px 20px;
 }
 
 /* Móvil muy pequeño (320px - 640px) */
@@ -1981,9 +1990,9 @@ textarea {
   position: relative;
   padding: 28px 22px 20px;
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
   background: linear-gradient(135deg, #eaf2e4 0%, #f4f7f0 40%, #fafdf7 100%);
   overflow: hidden;
 }
@@ -2011,10 +2020,54 @@ textarea {
   pointer-events: none;
 }
 
+.footer-social {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.footer-social span {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.social-links {
+  display: flex;
+  gap: 10px;
+}
+
+.social-links a {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 1.15rem;
+  transition: all 180ms ease;
+}
+
+.social-links a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.social-links a[aria-label="WhatsApp"]:hover { background: #25D366; color: #fff; border-color: #25D366; }
+.social-links a[aria-label="Facebook"]:hover { background: #1877F2; color: #fff; border-color: #1877F2; }
+.social-links a[aria-label="Instagram"]:hover { background: #E4405F; color: #fff; border-color: #E4405F; }
+.social-links a[aria-label="TikTok"]:hover { background: #000; color: #fff; border-color: #000; }
+.social-links a[aria-label="YouTube"]:hover { background: #FF0000; color: #fff; border-color: #FF0000; }
+
 @media (max-width: 768px) {
   .footer {
     padding: 16px 18px;
-    gap: 12px;
+    gap: 14px;
   }
 }
 
@@ -2022,13 +2075,21 @@ textarea {
   .footer {
     padding: 12px 14px;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
     text-align: center;
   }
 
   .footer p {
     margin: 4px 0 0;
     font-size: 0.85rem;
+  }
+
+  .footer-social {
+    width: 100%;
+  }
+
+  .social-links {
+    justify-content: center;
   }
 }
 

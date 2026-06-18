@@ -132,10 +132,10 @@ renderHeader('Carrito');
       <?php if ($totals['items']): ?>
         <form method="post">
           <?= csrfField() ?>
-          <button class="sale-ghost-btn" type="submit" name="action" value="clear" onclick="return confirm('Se vaciara todo el carrito.');">Vaciar</button>
+          <button class="sale-ghost-btn" type="submit" name="action" value="clear" onclick="return confirm('Se vaciara todo el carrito.');"><i class="fa-solid fa-trash-can"></i> Vaciar</button>
         </form>
       <?php endif; ?>
-      <a class="sale-icon-btn" href="store.php" aria-label="Cerrar carrito">x</a>
+      <a class="sale-icon-btn" href="store.php" aria-label="Cerrar carrito"><i class="fa-solid fa-xmark"></i></a>
     </div>
   </header>
 
@@ -150,7 +150,7 @@ renderHeader('Carrito');
       <div class="sale-section-head">
         <span>Productos</span>
         <?php if ($totals['items']): ?>
-          <button class="sale-chip" type="submit" form="cart-update-form" name="action" value="update" formnovalidate>Ajusta cantidades aqui</button>
+          <button class="sale-chip" type="submit" form="cart-update-form" name="action" value="update" formnovalidate><i class="fa-solid fa-pen"></i> Ajusta cantidades aqui</button>
         <?php endif; ?>
       </div>
     <?php if (!$totals['items']): ?>
@@ -164,7 +164,7 @@ renderHeader('Carrito');
             <label class="sale-checkbox-label">
               <input class="sale-checkbox" type="checkbox" form="cart-update-form" name="selected[<?= (int) $item['id'] ?>]" value="1" <?= $item['selected'] ? 'checked' : '' ?>>
             </label>
-            <button class="sale-remove" type="submit" form="cart-update-form" name="remove_id" value="<?= (int) $item['id'] ?>" aria-label="Quitar <?= e($item['name']) ?>" formnovalidate>x</button>
+            <button class="sale-remove" type="submit" form="cart-update-form" name="remove_id" value="<?= (int) $item['id'] ?>" aria-label="Quitar <?= e($item['name']) ?>" formnovalidate><i class="fa-solid fa-xmark"></i></button>
             <a class="sale-item-media" href="product.php?id=<?= (int) $item['id'] ?>">
               <img src="<?= e(productImage($item)) ?>" alt="<?= e($item['name']) ?>" loading="lazy">
             </a>
@@ -245,7 +245,7 @@ renderHeader('Carrito');
           <input id="sale_note" form="cart-update-form" name="notes" placeholder="Observacion de la venta">
         </div>
         <div class="sale-checkout-actions">
-          <button class="sale-confirm" type="submit" form="cart-update-form" name="action" value="confirm">Finalizar compra</button>
+          <button class="sale-confirm" type="submit" form="cart-update-form" name="action" value="confirm"><i class="fa-solid fa-check"></i> Finalizar compra</button>
         </div>
       </section>
     </aside>
@@ -254,9 +254,9 @@ renderHeader('Carrito');
   <footer class="sale-footer">
     <span>Revisa cantidades y confirma la venta cuando este lista.</span>
     <?php if ($totals['items']): ?>
-      <button class="sale-confirm" type="button" id="sale-start-checkout">Confirmar compra</button>
+      <button class="sale-confirm" type="button" id="sale-start-checkout"><i class="fa-solid fa-check"></i> Confirmar compra</button>
     <?php else: ?>
-      <a class="sale-confirm" href="store.php">Agregar productos</a>
+      <a class="sale-confirm" href="store.php"><i class="fa-solid fa-store"></i> Agregar productos</a>
     <?php endif; ?>
   </footer>
 </section>
@@ -270,7 +270,7 @@ renderHeader('Carrito');
           <span class="sale-kicker">Confirmar compra</span>
           <h2 id="sale-modal-title">Datos de entrega y pago</h2>
         </div>
-        <button class="sale-icon-btn" type="button" data-close-checkout aria-label="Cerrar">x</button>
+        <button class="sale-icon-btn" type="button" data-close-checkout aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="sale-modal-body"></div>
     </div>
@@ -278,7 +278,7 @@ renderHeader('Carrito');
 <?php endif; ?>
 
 <section class="cart-after-actions">
-  <a class="btn" href="store.php">Seguir comprando</a>
+  <a class="btn" href="store.php"><i class="fa-solid fa-store"></i> Seguir comprando</a>
 </section>
 <script>
   const startCheckout = document.getElementById('sale-start-checkout');

@@ -86,7 +86,7 @@ renderHeader('Registro');
       <label for="address">Direccion</label>
       <textarea id="address" name="address"></textarea>
     </div>
-    <button class="btn primary" type="submit">Registrarme</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-user-plus"></i> Registrarme</button>
   </form>
 </section>
 <?php renderFooter(); ?>

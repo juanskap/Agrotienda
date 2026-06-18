@@ -32,10 +32,10 @@ renderHeader('Recuperar contrasena');
       <label for="email">Correo electronico</label>
       <input id="email" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
     </div>
-    <button class="btn primary" type="submit">Enviar enlace de recuperacion</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Enviar enlace de recuperacion</button>
   </form>
   <div class="actions" style="margin-top:18px;">
-    <a class="btn" href="login.php">Volver al login</a>
+    <a class="btn" href="login.php"><i class="fa-solid fa-arrow-left"></i> Volver al login</a>
   </div>
 </section>
 <?php renderFooter(); ?>

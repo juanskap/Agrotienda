@@ -80,8 +80,8 @@ renderHeader('Admin productos', ['admin_area' => true]);
   <h2>Catalogo editable</h2>
   <p class="muted">Desde aqui puedes crear, editar o eliminar productos, incluyendo nombre, precio, stock y foto en la nube.</p>
   <div class="actions">
-    <a class="btn" href="admin.php">Volver al dashboard</a>
-    <a class="btn primary" href="admin_products.php">Nuevo producto</a>
+    <a class="btn" href="admin.php"><i class="fa-solid fa-chart-simple"></i> Volver al dashboard</a>
+    <a class="btn primary" href="admin_products.php"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
   </div>
 </section>
 
@@ -136,14 +136,14 @@ renderHeader('Admin productos', ['admin_area' => true]);
         <label for="description">Descripcion completa</label>
         <textarea id="description" name="description" required><?= e((string) $formData['description']) ?></textarea>
       </div>
-      <button class="btn primary" type="submit">Guardar producto</button>
+      <button class="btn primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Guardar producto</button>
     </form>
     <?php if ($editingProduct): ?>
       <form method="post" onsubmit="return confirm('Se eliminara este producto del catalogo.');">
         <?= csrfField() ?>
         <input type="hidden" name="action" value="delete">
         <input type="hidden" name="id" value="<?= (int) $editingProduct['id'] ?>">
-        <button class="btn danger" type="submit">Eliminar producto</button>
+        <button class="btn danger" type="submit"><i class="fa-solid fa-trash-can"></i> Eliminar producto</button>
       </form>
     <?php endif; ?>
   </article>
@@ -171,8 +171,8 @@ renderHeader('Admin productos', ['admin_area' => true]);
               <td><?= money((float) $product['price']) ?></td>
               <td><?= (int) $product['stock'] ?></td>
               <td class="table-actions">
-                <a class="btn" href="admin_products.php?id=<?= (int) $product['id'] ?>">Editar</a>
-                <a class="btn" href="product.php?id=<?= (int) $product['id'] ?>">Ver</a>
+                <a class="btn" href="admin_products.php?id=<?= (int) $product['id'] ?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                <a class="btn" href="product.php?id=<?= (int) $product['id'] ?>"><i class="fa-solid fa-eye"></i> Ver</a>
               </td>
             </tr>
           <?php endforeach; ?>

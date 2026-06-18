@@ -16,13 +16,13 @@ renderHeader('Favoritos');
     <h1>Tus productos guardados</h1>
     <p class="muted">Productos que marcaste para volver mas tarde o comparar antes de comprar.</p>
   </div>
-  <a class="btn light" href="store.php">Ir a la tienda</a>
+  <a class="btn light" href="store.php"><i class="fa-solid fa-store"></i> Ir a la tienda</a>
 </section>
 
 <?php if (!$favProducts): ?>
   <section class="card" style="text-align:center;padding:48px">
     <p class="muted" style="font-size:1.1rem">Todavia no tienes productos favoritos.</p>
-    <a class="btn primary" href="store.php" style="margin-top:12px">Explorar productos</a>
+    <a class="btn primary" href="store.php" style="margin-top:12px"><i class="fa-solid fa-store"></i> Explorar productos</a>
   </section>
 <?php else: ?>
   <section class="product-grid storefront-grid">
@@ -31,7 +31,7 @@ renderHeader('Favoritos');
         <a class="product-media" href="product.php?id=<?= (int) $product['id'] ?>">
           <img src="<?= e(productImage($product)) ?>" alt="<?= e($product['name']) ?>" loading="lazy">
           <span class="product-quick-view">
-            <strong>Ver detalle</strong>
+            <strong><i class="fa-solid fa-eye"></i> Ver detalle</strong>
             <small><?= e($product['short_description']) ?></small>
           </span>
         </a>

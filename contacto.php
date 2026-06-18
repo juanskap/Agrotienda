@@ -30,20 +30,20 @@ renderHeader('Contacto');
     <h1>Hablemos sobre tu compra o cultivo</h1>
     <p>Estamos listos para ayudarte con productos, disponibilidad, pedidos y seguimiento de entrega.</p>
   </div>
-  <a class="btn light" href="cart.php">Ver carrito</a>
+  <a class="btn light" href="cart.php"><i class="fa-solid fa-cart-shopping"></i> Ver carrito</a>
 </section>
 
 <section class="grid-3">
   <article class="stat">
-    <strong>099 000 0000</strong>
+    <strong><i class="fa-brands fa-whatsapp"></i> 099 000 0000</strong>
     <span class="muted">WhatsApp y llamadas</span>
   </article>
   <article class="stat">
-    <strong>08:00 - 18:00</strong>
+    <strong><i class="fa-solid fa-clock"></i> 08:00 - 18:00</strong>
     <span class="muted">Lunes a sabado</span>
   </article>
   <article class="stat">
-    <strong>Nacional</strong>
+    <strong><i class="fa-solid fa-truck"></i> Nacional</strong>
     <span class="muted">Cobertura de envios</span>
   </article>
 </section>
@@ -72,7 +72,7 @@ renderHeader('Contacto');
         <label for="mensaje">Mensaje</label>
         <textarea id="mensaje" name="mensaje" placeholder="Escribe aqui tu consulta" required></textarea>
       </div>
-      <button class="btn primary" type="submit">Enviar mensaje</button>
+      <button class="btn primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Enviar mensaje</button>
     </form>
   </article>
 

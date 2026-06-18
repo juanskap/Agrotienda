@@ -58,7 +58,7 @@ renderHeader('Mi cuenta');
         <label for="address">Direccion</label>
         <textarea id="address" name="address"><?= e($user['address']) ?></textarea>
       </div>
-      <button class="btn primary" type="submit">Guardar cambios</button>
+      <button class="btn primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
     </form>
   </article>
 
@@ -75,7 +75,7 @@ renderHeader('Mi cuenta');
               <span class="price"><?= money((float) $order['total']) ?></span>
             </div>
             <p class="muted">Estado: <?= e($order['status']) ?> | Fecha: <?= e(date('d/m/Y H:i', strtotime($order['created_at']))) ?></p>
-            <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>">Ver detalle</a>
+            <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>"><i class="fa-solid fa-eye"></i> Ver detalle</a>
           </div>
         <?php endforeach; ?>
       </div>
@@ -89,7 +89,7 @@ renderHeader('Mi cuenta');
     <span class="eyebrow">Favoritos</span>
     <h2>Mis productos favoritos</h2>
   </div>
-  <a class="btn" href="store.php">Ir a la tienda</a>
+  <a class="btn" href="store.php"><i class="fa-solid fa-store"></i> Ir a la tienda</a>
 </section>
 
 <section class="product-grid storefront-grid">
@@ -122,7 +122,7 @@ renderHeader('Mi cuenta');
           <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
           <input type="hidden" name="quantity" value="1">
           <input type="hidden" name="_redirect" value="<?= e($_SERVER['REQUEST_URI']) ?>">
-          <button class="btn primary full" type="submit">Agregar al carrito</button>
+          <button class="btn primary full" type="submit"><i class="fa-solid fa-cart-plus"></i> Agregar al carrito</button>
         </form>
       </div>
     </article>

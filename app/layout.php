@@ -150,9 +150,16 @@ function renderFooter(): void
     ?>
     </main>
     <footer class="footer">
-      <div>
-        <strong>Agrotienda funcional</strong>
-        <p>Catalogo, cuenta, carrito y pedidos ya conectados en PHP con SQLite.</p>
+
+      <div class="footer-social">
+        <span>Siguenos</span>
+        <div class="social-links">
+          <a href="https://wa.me/593990000000" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
       </div>
       <div class="footer-note">
         Panel administrativo protegido por cuenta autorizada.
@@ -194,6 +201,7 @@ function renderFooter(): void
       submitForm(form);
     });
   });
+
   </script>
 </body>
 </html>

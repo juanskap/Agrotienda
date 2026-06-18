@@ -51,18 +51,18 @@ renderHeader('Cambiar contrasena');
         <label for="confirm">Confirmar contrasena</label>
         <input id="confirm" name="confirm" type="password" required minlength="8" placeholder="Repite la contrasena">
       </div>
-      <button class="btn primary" type="submit">Actualizar contrasena</button>
+      <button class="btn primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Actualizar contrasena</button>
     </form>
   <?php else: ?>
     <span class="eyebrow">Error</span>
     <h2>Enlace invalido o expirado</h2>
     <p class="muted">El enlace de recuperacion no es valido o ya ha expirado. Solicita uno nuevo.</p>
     <div class="actions" style="margin-top:18px;">
-      <a class="btn primary" href="recuperar-password.php">Solicitar nuevo enlace</a>
+      <a class="btn primary" href="recuperar-password.php"><i class="fa-solid fa-paper-plane"></i> Solicitar nuevo enlace</a>
     </div>
   <?php endif; ?>
   <div class="actions" style="margin-top:18px;">
-    <a class="btn" href="login.php">Volver al login</a>
+    <a class="btn" href="login.php"><i class="fa-solid fa-arrow-left"></i> Volver al login</a>
   </div>
 </section>
 <?php renderFooter(); ?>

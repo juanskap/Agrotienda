@@ -134,9 +134,9 @@ renderHeader('Pedidos', ['admin_area' => true]);
       <label for="to">Hasta</label>
       <input id="to" name="to" type="date" value="<?= e($dateTo) ?>" style="min-width:130px">
     </div>
-    <button class="btn primary" type="submit">Filtrar</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-filter"></i> Filtrar</button>
     <?php if ($search !== '' || $dateFrom !== '' || $dateTo !== '' || $activeStatus !== ''): ?>
-      <a class="btn" href="admin_orders.php#pedidos-lista">Limpiar</a>
+      <a class="btn" href="admin_orders.php#pedidos-lista"><i class="fa-solid fa-xmark"></i> Limpiar</a>
     <?php endif; ?>
   </form>
 </section>
@@ -188,7 +188,7 @@ renderHeader('Pedidos', ['admin_area' => true]);
                 <span class="status-pill <?= e(statusPillClass($order['status'])) ?>"><?= e($order['status']) ?></span>
               </td>
               <td class="table-actions">
-                <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>">Detalle</a>
+                <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>"><i class="fa-solid fa-eye"></i> Detalle</a>
               </td>
             </tr>
           <?php endforeach; ?>
@@ -198,11 +198,11 @@ renderHeader('Pedidos', ['admin_area' => true]);
     <?php if ($totalPages > 1): ?>
       <div class="pagination">
         <?php if ($page > 1): ?>
-          <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>#pedidos-lista">Anterior</a>
+          <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>#pedidos-lista"><i class="fa-solid fa-chevron-left"></i> Anterior</a>
         <?php endif; ?>
         <span class="pagination-info">Pagina <?= $page ?> de <?= $totalPages ?> (<?= $totalOrders ?> pedidos)</span>
         <?php if ($page < $totalPages): ?>
-          <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>#pedidos-lista">Siguiente</a>
+          <a class="btn" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>#pedidos-lista">Siguiente <i class="fa-solid fa-chevron-right"></i></a>
         <?php endif; ?>
       </div>
     <?php endif; ?>

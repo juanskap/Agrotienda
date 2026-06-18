@@ -26,9 +26,9 @@ renderHeader('Admin', ['admin_area' => true]);
 ?>
 <section class="toolbar">
   <a class="btn primary" href="admin_products.php"><i class="fa-solid fa-plus"></i> Nuevo producto</a>
-  <a class="btn" href="admin_orders.php?status=Recibido">Pedidos pendientes <?= $pendingCount > 0 ? '(' . $pendingCount . ')' : '' ?></a>
-  <a class="btn" href="admin_messages.php?status=Nuevo">Mensajes sin leer</a>
-  <a class="btn" href="admin_inventory.php?filter=low">Stock bajo</a>
+  <a class="btn" href="admin_orders.php?status=Recibido"><i class="fa-solid fa-clipboard-list"></i> Pedidos pendientes <?= $pendingCount > 0 ? '(' . $pendingCount . ')' : '' ?></a>
+  <a class="btn" href="admin_messages.php?status=Nuevo"><i class="fa-solid fa-message"></i> Mensajes sin leer</a>
+  <a class="btn" href="admin_inventory.php?filter=low"><i class="fa-solid fa-triangle-exclamation"></i> Stock bajo</a>
 </section>
 
 <section class="stats">
@@ -66,7 +66,7 @@ renderHeader('Admin', ['admin_area' => true]);
   <section class="card stock-alert">
     <div class="line">
       <h3>Stock critico</h3>
-      <a class="btn" href="admin_inventory.php?filter=low">Ver inventario</a>
+      <a class="btn" href="admin_inventory.php?filter=low"><i class="fa-solid fa-warehouse"></i> Ver inventario</a>
     </div>
     <div class="table-wrap">
       <table>
@@ -83,8 +83,8 @@ renderHeader('Admin', ['admin_area' => true]);
               <td><?= e($item['name']) ?></td>
               <td><span class="status-pill danger"><?= (int) $item['stock'] ?> uds</span></td>
               <td class="table-actions">
-                <a class="btn" href="admin_products.php?id=<?= (int) $item['id'] ?>">Editar</a>
-                <a class="btn" href="admin_inventory.php">Movimiento</a>
+                <a class="btn" href="admin_products.php?id=<?= (int) $item['id'] ?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
+                <a class="btn" href="admin_inventory.php"><i class="fa-solid fa-boxes"></i> Movimiento</a>
               </td>
             </tr>
           <?php endforeach; ?>
@@ -98,7 +98,7 @@ renderHeader('Admin', ['admin_area' => true]);
   <article class="card">
     <div class="line">
       <h3>Pedidos de hoy <?= count($ordersToday) > 0 ? '(' . count($ordersToday) . ')' : '' ?></h3>
-      <a class="btn" href="admin_orders.php">Ver todos</a>
+      <a class="btn" href="admin_orders.php"><i class="fa-solid fa-eye"></i> Ver todos</a>
     </div>
     <?php if (!$ordersToday): ?>
       <div class="empty">Todavia no hay pedidos registrados hoy.</div>
@@ -114,7 +114,7 @@ renderHeader('Admin', ['admin_area' => true]);
           </div>
           <div class="line">
             <span class="status-pill <?= e($statusClasses[$order['status']] ?? 'warning') ?>"><?= e($order['status']) ?></span>
-            <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>">Ver detalle</a>
+            <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>"><i class="fa-solid fa-eye"></i> Ver detalle</a>
           </div>
         </div>
       <?php endforeach; ?>
@@ -135,7 +135,7 @@ renderHeader('Admin', ['admin_area' => true]);
               </div>
               <div class="line">
                 <span class="status-pill <?= e($statusClasses[$order['status']] ?? 'warning') ?>"><?= e($order['status']) ?></span>
-                <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>">Ver detalle</a>
+                <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>"><i class="fa-solid fa-eye"></i> Ver detalle</a>
               </div>
             </div>
           <?php endforeach; ?>
@@ -158,7 +158,7 @@ renderHeader('Admin', ['admin_area' => true]);
               </div>
               <div class="line">
                 <span class="status-pill <?= e($statusClasses[$order['status']] ?? 'warning') ?>"><?= e($order['status']) ?></span>
-                <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>">Ver detalle</a>
+                <a class="btn" href="order.php?id=<?= (int) $order['id'] ?>"><i class="fa-solid fa-eye"></i> Ver detalle</a>
               </div>
             </div>
           <?php endforeach; ?>
@@ -171,7 +171,7 @@ renderHeader('Admin', ['admin_area' => true]);
 <section class="card">
   <div class="line">
     <h3>Mensajes de contacto</h3>
-    <a class="btn" href="admin_messages.php">Abrir bandeja</a>
+    <a class="btn" href="admin_messages.php"><i class="fa-solid fa-inbox"></i> Abrir bandeja</a>
   </div>
   <?php if (!$recentMessages): ?>
     <div class="empty">Todavia no hay mensajes recibidos.</div>

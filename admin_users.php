@@ -48,7 +48,7 @@ renderHeader('Clientes', ['admin_area' => true]);
       <label for="q">Buscar cliente</label>
       <input id="q" name="q" value="<?= e($search) ?>" placeholder="Nombre, correo o telefono">
     </div>
-    <button class="btn primary" type="submit">Buscar</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
   </form>
 </section>
 

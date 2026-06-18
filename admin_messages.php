@@ -64,7 +64,7 @@ renderHeader('Mensajes', ['admin_area' => true]);
         <?php endforeach; ?>
       </select>
     </div>
-    <button class="btn primary" type="submit">Filtrar</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-filter"></i> Filtrar</button>
   </form>
 </section>
 
@@ -92,7 +92,7 @@ renderHeader('Mensajes', ['admin_area' => true]);
                 <option value="<?= e($status) ?>" <?= $message['status'] === $status ? 'selected' : '' ?>><?= e($status) ?></option>
               <?php endforeach; ?>
             </select>
-            <button class="btn" type="submit">Guardar estado</button>
+            <button class="btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> Guardar estado</button>
           </form>
         </article>
       <?php endforeach; ?>

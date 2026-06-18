@@ -14,7 +14,7 @@ renderHeader('Nosotros');
     <h1>Aliados del productor y del campo</h1>
     <p>Agrotienda conecta insumos, herramientas y atencion cercana para que comprar sea simple, confiable y con inventario real.</p>
   </div>
-  <a class="btn light" href="store.php">Ver tienda</a>
+  <a class="btn light" href="store.php"><i class="fa-solid fa-store"></i> Ver tienda</a>
 </section>
 
 <section class="split">
@@ -24,8 +24,8 @@ renderHeader('Nosotros');
     <p class="muted">Trabajamos con una experiencia ordenada para productores, huertos familiares y clientes que necesitan resolver compras agricolas sin perder tiempo.</p>
     <p class="muted">El catalogo, el carrito y los pedidos estan conectados para cuidar el stock disponible y mantener el historial de compra claro.</p>
     <div class="actions">
-      <a class="btn primary" href="store.php">Explorar catalogo</a>
-      <a class="btn" href="contacto.php">Contactar</a>
+      <a class="btn primary" href="store.php"><i class="fa-solid fa-store"></i> Explorar catalogo</a>
+      <a class="btn" href="contacto.php"><i class="fa-solid fa-envelope"></i> Contactar</a>
     </div>
   </article>
 
@@ -50,17 +50,17 @@ renderHeader('Nosotros');
 
 <section class="grid-3">
   <article class="spotlight-card">
-    <span class="spotlight-badge">M</span>
+    <span class="spotlight-badge"><i class="fa-solid fa-bullseye"></i></span>
     <strong>Mision</strong>
     <small>Acercar productos agricolas y herramientas con una compra rapida, clara y confiable.</small>
   </article>
   <article class="spotlight-card">
-    <span class="spotlight-badge">V</span>
+    <span class="spotlight-badge"><i class="fa-solid fa-eye"></i></span>
     <strong>Vision</strong>
     <small>Ser una tienda digital preparada para crecer en catalogo, pedidos y atencion personalizada.</small>
   </article>
   <article class="spotlight-card">
-    <span class="spotlight-badge">P</span>
+    <span class="spotlight-badge"><i class="fa-solid fa-handshake"></i></span>
     <strong>Propuesta</strong>
     <small>Unir catalogo, control de inventario y soporte en una experiencia sencilla para el cliente.</small>
   </article>
@@ -72,7 +72,7 @@ renderHeader('Nosotros');
       <span class="eyebrow">Catalogo activo</span>
       <h2>Productos que respaldan la tienda</h2>
     </div>
-    <a class="btn" href="store.php">Ver mas productos</a>
+    <a class="btn" href="store.php"><i class="fa-solid fa-store"></i> Ver mas productos</a>
   </section>
 
   <section class="product-grid">

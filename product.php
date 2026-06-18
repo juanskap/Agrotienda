@@ -61,8 +61,8 @@ renderHeader('Producto');
         <input id="quantity" type="number" name="quantity" value="1" min="1" max="<?= (int) $product['stock'] ?>">
       </div>
       <div class="actions">
-        <button class="btn primary" type="submit">Agregar al carrito</button>
-        <a class="btn" href="store.php">Volver a la tienda</a>
+        <button class="btn primary" type="submit"><i class="fa-solid fa-cart-plus"></i> Agregar al carrito</button>
+        <a class="btn" href="store.php"><i class="fa-solid fa-store"></i> Volver a la tienda</a>
       </div>
     </form>
   </article>

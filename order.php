@@ -37,8 +37,8 @@ renderHeader('Pedido');
     <p class="muted">Generamos el ticket del pedido #<?= (int) $order['id'] ?> para el correo <?= e($order['customer_email']) ?>. Te notificaremos cuando el pedido sea procesado.</p>
   </div>
   <div class="order-actions">
-    <button class="btn primary" type="button" onclick="window.print()">Imprimir ticket</button>
-    <a class="btn" href="store.php">Seguir comprando</a>
+    <button class="btn primary" type="button" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir ticket</button>
+    <a class="btn" href="store.php"><i class="fa-solid fa-store"></i> Seguir comprando</a>
   </div>
 </section>
 
@@ -58,7 +58,7 @@ renderHeader('Pedido');
                 <option value="<?= e($s) ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= e($s) ?></option>
               <?php endforeach; ?>
             </select>
-            <button class="btn primary" type="submit" style="min-height:32px;padding:0 14px;font-size:0.85rem;border-radius:999px">Actualizar</button>
+            <button class="btn primary" type="submit" style="min-height:32px;padding:0 14px;font-size:0.85rem;border-radius:999px"><i class="fa-solid fa-check"></i> Actualizar</button>
           </form>
           | Fecha <?= e(date('d/m/Y H:i', strtotime($order['created_at']))) ?>
         <?php else: ?>
@@ -67,8 +67,8 @@ renderHeader('Pedido');
       </p>
     </div>
     <div class="order-actions">
-      <button class="btn primary" type="button" onclick="window.print()">Imprimir</button>
-      <a class="btn" href="<?= $user['role'] === 'admin' ? 'admin.php' : 'account.php' ?>">Volver</a>
+      <button class="btn primary" type="button" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir</button>
+      <a class="btn" href="<?= $user['role'] === 'admin' ? 'admin.php' : 'account.php' ?>"><i class="fa-solid fa-arrow-left"></i> Volver</a>
     </div>
   </div>
 

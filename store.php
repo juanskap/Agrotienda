@@ -50,7 +50,7 @@ renderHeader('Tienda', [
   <a class="btn light" href="cart.php"><i class="fa-solid fa-cart-shopping"></i> Ver carrito</a>
 </section>
 
-<section class="store-toolbar">
+<section class="store-toolbar" id="store-toolbar">
   <form class="grid-3 form" method="get">
     <div class="field">
       <label for="q">Buscar</label>
@@ -114,13 +114,13 @@ renderHeader('Tienda', [
 <?php if ($totalPaginas > 1): ?>
   <nav class="pagination">
     <?php if ($pagina > 1): ?>
-      <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $pagina - 1])) ?>">&laquo; Anterior</a>
+      <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $pagina - 1])) ?>#store-toolbar">&laquo; Anterior</a>
     <?php endif; ?>
     <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-      <a class="page-link <?= $i === $pagina ? 'is-active' : '' ?>" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>"><?= $i ?></a>
+      <a class="page-link <?= $i === $pagina ? 'is-active' : '' ?>" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $i])) ?>#store-toolbar"><?= $i ?></a>
     <?php endfor; ?>
     <?php if ($pagina < $totalPaginas): ?>
-      <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $pagina + 1])) ?>">Siguiente &raquo;</a>
+      <a class="page-link" href="?<?= http_build_query(array_merge($_GET, ['pagina' => $pagina + 1])) ?>#store-toolbar">Siguiente &raquo;</a>
     <?php endif; ?>
   </nav>
 <?php endif; ?>

@@ -45,11 +45,11 @@ renderHeader('Ingresar');
       <label for="password">Contrasena</label>
       <input id="password" name="password" type="password" required>
     </div>
-    <button class="btn primary" type="submit">Entrar</button>
+    <button class="btn primary" type="submit"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
   </form>
   <div class="actions" style="margin-top:18px;">
-    <a class="btn" href="recuperar-password.php">Recuperar contrasena</a>
-    <a class="btn" href="register.php">Crear cuenta de cliente</a>
+    <a class="btn" href="recuperar-password.php"><i class="fa-solid fa-key"></i> Recuperar contrasena</a>
+    <a class="btn" href="register.php"><i class="fa-solid fa-user-plus"></i> Crear cuenta de cliente</a>
   </div>
 </section>
 <?php renderFooter(); ?>

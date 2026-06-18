@@ -75,7 +75,7 @@ renderHeader('Checkout');
     <h1>Datos de entrega</h1>
     <p>Confirma quien recibe el pedido, a donde debe llegar y cualquier referencia importante.</p>
   </div>
-  <a class="btn light" href="cart.php">Editar carrito</a>
+  <a class="btn light" href="cart.php"><i class="fa-solid fa-pen-to-square"></i> Editar carrito</a>
 </section>
 
 <section class="split checkout-layout">
@@ -127,8 +127,8 @@ renderHeader('Checkout');
       </div>
 
       <div class="checkout-actions">
-        <a class="btn" href="cart.php">Volver al carrito</a>
-        <button class="btn primary" type="submit">Confirmar compra</button>
+        <a class="btn" href="cart.php"><i class="fa-solid fa-arrow-left"></i> Volver al carrito</a>
+        <button class="btn primary" type="submit"><i class="fa-solid fa-check"></i> Confirmar compra</button>
       </div>
     </form>
   </article>
